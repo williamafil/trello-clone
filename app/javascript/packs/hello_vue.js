@@ -52,30 +52,30 @@
 // yarn add vue-turbolinks
 //
 // Then uncomment the code block below:
-//
-import TurbolinksAdapter from "vue-turbolinks";
-import Vue from "vue/dist/vue.esm";
-import App from "../app.vue";
-import Footer from "./FooterDemo.vue";
+// //
+// import TurbolinksAdapter from "vue-turbolinks";
+// import Vue from "vue/dist/vue.esm";
+// import App from "../app.vue";
+// import Footer from "./FooterDemo.vue";
 
-Vue.use(TurbolinksAdapter);
+// Vue.use(TurbolinksAdapter);
 
-document.addEventListener("turbolinks:load", () => {
-  const app = new Vue({
-    el: "#hello",
-    components: {
-      Footer,
-    },
-    data: () => {
-      return {
-        message: "哈囉世界",
-      };
-    },
-    methods: {
-      greeting() {
-        return "hey...";
-      },
-    },
-    components: { App },
-  });
-});
+// document.addEventListener("turbolinks:load", () => {
+//   const app = new Vue({
+//     el: "#hello",
+//     components: {
+//       Footer,
+//     },
+//     data: () => {
+//       return {
+//         message: "哈囉世界",
+//       };
+//     },
+//     methods: {
+//       greeting() {
+//         return "hey...";
+//       },
+//     },
+//     components: { App },
+//   });
+// });

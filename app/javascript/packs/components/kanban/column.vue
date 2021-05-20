@@ -1,12 +1,24 @@
 <template>
   <div class="column">
     <div class="column-name">{{ column.name }}</div>
+    <div class="ticket-list">
+      <column-ticket
+        v-for="ticket in column.tickets"
+        :key="ticket.id"
+        :ticket="ticket"
+      />
+    </div>
   </div>
 </template>
 
 <script>
+import ColumnTicket from "./ticket";
+
 export default {
   name: "Column",
+  components: {
+    ColumnTicket,
+  },
   props: {
     column: {
       type: Object,

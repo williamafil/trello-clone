@@ -1,0 +1,32 @@
+<%= form_with(model: kanban, local: true) do |form| %>
+  <% if kanban.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(kanban.errors.count, "error") %> prohibited this kanban from being saved:</h2>
+
+      <ul>
+        <% kanban.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <div>
+      <%= form.label "看板名稱", class: "text-teal-700" %>
+    </div>
+    <%= form.text_field :name, class: "input is-success m-3 bg-gray-200 rounded-md px-3 py-2" %>
+  </div>
+
+  <div class="field">
+    <div>
+      <%= form.label "看板描述", class: "text-gray-700" %>
+    </div>
+    <%= form.text_area :description, class: "input is-success m-3 bg-gray-200 rounded-md px-3 py-2" %>
+  </div>
+
+  <div class="actions m-3">
+    <%= form.submit "建立看板", class: "bg-teal-300 px-3 py-2 rounded" %>
+  </div>
+    <%#= link_to '回上一頁', dashboard_path, class: "bg-yellow-300 px-3 py-2 rounded" %>
+<% end %>

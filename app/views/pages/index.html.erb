@@ -1,6 +1,9 @@
 <div id="main-area">
   <div class="main-title">Vue.js x Rails{{ title }}</div>
   <div class="main-body">本日主題：Rails專案內加上Vue元件</div>
+  <div class="main-avatar" v-for="user in users" :key="user.id.value">
+    <img class="avatar" :src="user.picture.thumbnail">
+  </div>
   <footer-component></footer-component>
   <demo-component rootprop="this is a string from index" />
 </div>

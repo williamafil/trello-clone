@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   
+  resources :tickets
   resources :kanbans do
     resources :columns, except: [:new, :edit]
   end

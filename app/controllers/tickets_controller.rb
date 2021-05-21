@@ -36,15 +36,21 @@ class TicketsController < ApplicationController
   def create
     @ticket = Ticket.new(ticket_params)
 
-    respond_to do |format|
-      if @ticket.save
-        format.html { redirect_to @ticket, notice: "Ticket was successfully created." }
-        format.json { render :show, status: :created, location: @ticket }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @ticket.errors, status: :unprocessable_entity }
-      end
+    # respond_to do |format|
+    #   if @ticket.save
+    #     # format.html { redirect_to @ticket, notice: "Ticket was successfully created." }
+    #     format.json { render :show, status: :created, location: @ticket }
+    #   else
+    #     # format.html { render :new, status: :unprocessable_entity }
+    #     format.json { render json: @ticket.errors, status: :unprocessable_entity }
+    #   end
+    # end
+    if @ticket.save
+      render json: @ticket, status: :ok
+    else
+      render json: @ticket.errors, status: :unprocessable_entity
     end
+    # render "show.json"
   end
 
   # PATCH/PUT /tickets/1 or /tickets/1.json

@@ -60,16 +60,15 @@ document.addEventListener("turbolinks:load", () => {
       data() {
         return {
           kanban_id: el.dataset.kanbanid,
+          newColumnName: "",
           // columns: [],
         };
       },
       beforeMount() {
-        console.log("this: ", this);
         this.$store.dispatch("get_columns", this.kanban_id);
       },
       methods: {
         dropColumn(event) {
-          console.log("dragColumn event: ", event);
           const kanban_id = event.moved.element.kanban_id;
           const column_id = event.moved.element.id;
           axios
@@ -85,6 +84,9 @@ document.addEventListener("turbolinks:load", () => {
         },
         checkMove(event) {
           console.log("checkMove event: ", event);
+        },
+        createColumn() {
+          // console.log("columnd id: ", this.columnd.id);
         },
       },
       computed: {

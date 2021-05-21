@@ -20,73 +20,7 @@
     </div>
     <% end %>
 
-    <div class="font-light mt-5 center"><%= link_to '新增Kanban', new_kanban_path, class: "font-light button py-2 px-3 bg-teal-200 rounded" %></div>
+    <div class="font-light mt-5 center"><%= link_to '新增Kanban', new_kanban_path, class: "font-light button border bg-gray-100 hover:bg-gray-400 hover:border-transparent shadow py-2 px-3 rounded" %></div>
     </div> 
   </div>
 </section>
-
-<div class="board p-4 bg-gray-300 h-full overflow-auto">
-  <div class="board">
-    <div class="flex flex-row items-start">
-      
-      <% @kanbans.each do |kanban| %>
-      <div
-        class="w-56 bg-gray-200 p-2 mr-4 text-left shadow rounded cursor-move"
-        draggable
-        @dragstart.self="pickupColumn($event, columnIndex)"
-        @drop="moveTaskOrColumn($event, column.tasks, columnIndex)"
-        @dragover.prevent
-        @dragenter.prevent
-      >
-        <div class="flex items-center mb-2 font-bold" :title="columnIndex">
-          <%= link_to kanban.name, kanban_path(kanban) %>
-        </div>
-        <div class="list-reset">
-
-          <div
-            class="
-              task
-              cursor-pointer
-              flex
-              items-center
-              flex-wrap
-              shadow
-              mb-2
-              py-2
-              px-2
-              rounded
-              bg-white
-              no-underline
-            "
-            v-for="(task, $taskIndex) of column.tasks"
-            :key="$taskIndex"
-            draggable
-            @dragstart="pickupTask($event, $taskIndex, columnIndex)"
-            @click="goToTask(task)"
-            @dragover.prevent
-            @dragenter.prevent
-            @drop.stop="moveTaskOrColumn($event, column.tasks, columnIndex, $taskIndex)"
-          >
-            <span class="w-full flex-shrink-0 font-bold" :title="$taskIndex">
-              task.name
-            </span>
-            <p v-if="task.description" class="w-full flex-no-shrink mt-1 text-sm">
-              <%= kanban.description %>
-            </p>
-          </div>
-          <input
-            type="text"
-            class="block w-full rounded p-2 bg-gray-100"
-            placeholder="add new task"
-            @keyup.enter="createTask($event, column.tasks)"
-          />
-        </div>
-      </div>
-      <% end %>
-
-    </div>
-  </div>
-  <div class="task-bg" v-if="isTaskOpen" @click="closeTask">
-    <router-view />
-  </div>
-</div>

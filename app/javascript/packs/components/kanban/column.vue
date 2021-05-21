@@ -1,20 +1,46 @@
 <template>
-  <div class="column bg-gray-100 mx-2 w-64 rounded">
-    <div class="column-name font-thin px-3 py-2">
-      {{ column.name }} (id: {{ column.id }})
-    </div>
-    <draggable
-      class="ticket-list"
-      v-model="column.tickets"
-      group="column"
-      @change="dropTicket"
+  <div>
+    <div
+      class="column bg-gray-200 p-2 mr-4 text-left shadow rounded cursor-move"
     >
-      <column-ticket
-        v-for="ticket in column.tickets"
-        :key="ticket.id"
-        :ticket="ticket"
-      />
-    </draggable>
+      <div class="flex items-center mb-2 font-bold">
+        {{ column.name }} <span class="text-xs">(id: {{ column.id }})</span>
+      </div>
+      <div class="list-reset">
+        <draggable
+          class="ticket-list"
+          v-model="column.tickets"
+          group="column"
+          @change="dropTicket"
+        >
+          <column-ticket
+            class="
+              task
+              cursor-pointer
+              flex
+              items-center
+              flex-wrap
+              shadow
+              mb-2
+              py-2
+              px-2
+              rounded
+              bg-white
+              no-underline
+            "
+            v-for="ticket in column.tickets"
+            :key="ticket.id"
+            :ticket="ticket"
+          />
+        </draggable>
+        <input
+          type="text"
+          class="block w-full rounded p-2 bg-gray-100"
+          placeholder="add new task"
+          @keyup.enter="createTicket"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -43,29 +69,31 @@ export default {
   },
   methods: {
     dropTicket(event) {
-      console.log("drop ticket event: ", event);
       const ticketItem = event.added || event.moved;
       if (ticketItem) {
         const kanban_id = this.column.kanban_id;
         const column_id = this.column.id;
         const ticket_id = ticketItem.element.id;
-        // console.log("column_id: ", column_id);
-        console.log("ticket_id: ", ticket_id);
-        console.log("this: ", this);
-        console.log("current column id:", this.column.id);
 
         axios
           .put(`/kanbans/${kanban_id}/tickets/${ticket_id}/drag`, {
             column_id,
             position: ticketItem.newIndex + 1,
           })
-          .then((res) => {
-            console.log("drag res: ", res);
-          })
-          .catch((error) => {
-            console.log("無法移動 column: ", error.response);
-          });
+          .then((res) => {})
+          .catch((error) => {});
       }
+    },
+    createTicket(event) {
+      this.$store
+        .dispatch("add_ticket", {
+          kanbanId: this.kanban_id,
+          name: event.target.value,
+          columnId: this.column.id,
+        })
+        .then(() => {
+          event.target.value = "";
+        });
     },
   },
 };

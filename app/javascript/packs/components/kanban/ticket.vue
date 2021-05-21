@@ -1,5 +1,7 @@
 <template>
-  <div class="ticket">{{ ticket.name }}</div>
+  <span class="w-full flex-shrink-0 font-bold">
+    {{ ticket.name }}
+  </span>
 </template>
 
 <script>
@@ -15,7 +17,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.ticket {
-  @apply bg-yellow-50 mx-2 mb-2 rounded-md px-2 py-2 font-thin text-sm shadow-sm;
-}
+// .ticket {
+//   @apply bg-yellow-50 mx-2 mb-2 rounded-md px-2 py-2 font-thin text-sm shadow-sm;
+// }
 </style>

@@ -15,7 +15,8 @@
     "vue": "^2.6.12",
     "vue-loader": "^15.9.7",
     "vue-template-compiler": "^2.6.12",
-    "vue-turbolinks": "^2.2.2"
+    "vue-turbolinks": "^2.2.2",
+    "vuedraggable": "^2.24.3"
   },
   "version": "0.1.0",
   "devDependencies": {

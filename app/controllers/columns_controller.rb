@@ -1,5 +1,16 @@
 class ColumnsController < ApplicationController
-  before_action :set_column, only: %i[ show edit update destroy ]
+  before_action :set_column, only: %i[ drag show edit update destroy ]
+
+  def drag
+    puts "= = = = = = = DRAG (column id: )"
+    puts @column.id
+    puts "= = = = = = = params[:position]"
+    puts params[:position]
+
+    @column.insert_at(params[:position].to_i)
+    
+    render "show.json"
+  end
 
   # GET /columns or /columns.json
   def index

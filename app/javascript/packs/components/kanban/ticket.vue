@@ -1,7 +1,5 @@
 <template>
-  <div class="ticket">
-    {{ ticket.name }}
-  </div>
+  <div class="ticket">{{ ticket.name }}</div>
 </template>
 
 <script>

@@ -22,6 +22,7 @@ import TurbolinksAdapter from "vue-turbolinks";
 import Vue from "vue/dist/vue.esm";
 import BoardColumn from "./components/kanban/column";
 import axios from "axios-on-rails";
+import draggable from "vuedraggable";
 
 // import Rails from "@rails/ujs";
 // 裡面打ajax跟資料庫取得資料。
@@ -52,7 +53,7 @@ document.addEventListener("turbolinks:load", () => {
   if (el) {
     new Vue({
       el,
-      components: { BoardColumn },
+      components: { BoardColumn, draggable },
       data() {
         return {
           kanban_id: el.dataset.kanbanid,
@@ -69,6 +70,26 @@ document.addEventListener("turbolinks:load", () => {
           .catch((error) => {
             console.log(error.response);
           });
+      },
+      methods: {
+        dropColumn(event) {
+          console.log("dragColumn event: ", event);
+          const kanban_id = event.moved.element.kanban_id;
+          const column_id = event.moved.element.id;
+          axios
+            .put(`/kanbans/${kanban_id}/columns/${column_id}/drag`, {
+              position: event.moved.newIndex + 1,
+            })
+            .then((res) => {
+              console.log("drag res: ", res);
+            })
+            .catch((error) => {
+              console.log("無法移動 column: ", error.response);
+            });
+        },
+        checkMove(event) {
+          console.log("checkMove event: ", event);
+        },
       },
     });
   }

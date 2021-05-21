@@ -1,5 +1,7 @@
-<div id="column" class="mt-2 px-3 flex" data-kanbanid="<%= @kanban.id %>" >
-  <!-- Column元件的位置 -->
-  <!--  -->
-  <board-column v-for="column in columns" :column="column" :key="column.id" />
+<div id="column" class="mt-2 px-3" data-kanbanid="<%= @kanban.id %>" >
+  <draggable v-model="columns" @change="dropColumn" :move="checkMove">
+    <transition-group  class="flex">
+      <board-column v-for="column in columns" :column="column" :key="column.id" />
+    </transition-group>
+  </draggable>
 </div>

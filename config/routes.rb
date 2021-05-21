@@ -1,8 +1,17 @@
 Rails.application.routes.draw do
   
-  resources :tickets
+  # resources :tickets
   resources :kanbans do
-    resources :columns, except: [:new, :edit]
+    resources :columns, except: [:new, :edit] do
+      member do
+        put 'drag'
+      end
+    end
+    resources :tickets, only: [:create, :update, :destroy] do
+      member do
+        put 'drag'
+      end
+    end
   end
 
   devise_for :users

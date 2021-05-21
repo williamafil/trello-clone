@@ -1,6 +1,6 @@
 class Column < ApplicationRecord
   belongs_to :kanban
-  act_as_list scope: :kanban
+  acts_as_list scope: :kanban
 
   has_many :tickets, -> { order(position: :asc) }, dependent: :destroy
   

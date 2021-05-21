@@ -1,6 +1,19 @@
 class TicketsController < ApplicationController
   before_action :set_ticket, only: %i[ show edit update destroy ]
 
+  def drag
+    @ticket = Ticket.find(params[:id])
+    # kanban_id = params[:kanban_id]
+    # column_id = params[:column_id]
+    # position = params[:position]
+
+    if @ticket.update(ticket_params)
+      render json: @ticket, status: :ok
+    else
+      render json: @ticket.errors, status: :unprocessable_entity
+    end
+  end
+
   # GET /tickets or /tickets.json
   def index
     @tickets = Ticket.all

@@ -20,9 +20,11 @@ import "../stylesheets";
 // Vue
 import TurbolinksAdapter from "vue-turbolinks";
 import Vue from "vue/dist/vue.esm";
+import store from "../store/index";
 import BoardColumn from "./components/kanban/column";
-import axios from "axios-on-rails";
 import draggable from "vuedraggable";
+import axios from "axios-on-rails";
+import { mapState } from "vuex";
 
 // import Rails from "@rails/ujs";
 // 裡面打ajax跟資料庫取得資料。
@@ -53,23 +55,17 @@ document.addEventListener("turbolinks:load", () => {
   if (el) {
     new Vue({
       el,
+      store,
       components: { BoardColumn, draggable },
       data() {
         return {
           kanban_id: el.dataset.kanbanid,
-          columns: [],
+          // columns: [],
         };
       },
       beforeMount() {
-        axios
-          .get(`/kanbans/${this.kanban_id}/columns.json`)
-          .then((res) => {
-            console.log("res: ", res);
-            this.columns = res.data;
-          })
-          .catch((error) => {
-            console.log(error.response);
-          });
+        console.log("this: ", this);
+        this.$store.dispatch("get_columns", this.kanban_id);
       },
       methods: {
         dropColumn(event) {
@@ -89,6 +85,26 @@ document.addEventListener("turbolinks:load", () => {
         },
         checkMove(event) {
           console.log("checkMove event: ", event);
+        },
+      },
+      computed: {
+        // 當資料來源轉移到 vuex store 後，出現了錯誤訊息
+        // [Vue warn]: Computed property "columns" was assigned to but it has no setter.
+        // 因為在 columns/index.html.erb <draggable v-model="column.tickets"> 這個 v-model reactivity，
+        // 而 mapState 裡面只有 getter, 沒有 setter 所以無法把資料反寫回去
+        // https://stackoverflow.com/questions/46106037/vuex-computed-property-name-was-assigned-to-but-it-has-no-setter
+        // If you're going to v-model a computed property, it needs a setter.
+        // Whatever you want it to do with the updated value(probably write it to the $store,
+        // considering that's what your getter pulls it from) you do in the setter.
+
+        // ...mapState(["columns"]), // 改寫這一行
+        columns: {
+          get() {
+            return this.$store.state.columns;
+          },
+          set(val) {
+            this.$store.commit("UPDATE_COLUMNS", val);
+          },
         },
       },
     });

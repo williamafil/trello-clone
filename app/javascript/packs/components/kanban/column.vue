@@ -1,6 +1,8 @@
 <template>
-  <div class="column">
-    <div class="column-name">{{ column.name }} (id: {{ column.id }})</div>
+  <div class="column bg-gray-100 mx-2 w-64 rounded">
+    <div class="column-name font-thin px-3 py-2">
+      {{ column.name }} (id: {{ column.id }})
+    </div>
     <draggable
       class="ticket-list"
       v-model="column.tickets"
@@ -70,11 +72,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.column {
-  @apply bg-gray-100 mx-2 w-64 rounded;
+// .column {
+//   @apply bg-gray-100 mx-2 w-64 rounded;
 
-  .column-name {
-    @apply font-thin px-3 py-2;
-  }
-}
+//   .column-name {
+//     @apply font-thin px-3 py-2;
+//   }
+// }
 </style>

@@ -65,7 +65,7 @@ document.addEventListener("turbolinks:load", () => {
         };
       },
       beforeMount() {
-        this.$store.dispatch("get_columns", this.kanban_id);
+        this.$store.dispatch("getColumns", this.kanban_id);
       },
       methods: {
         dropColumn(event) {

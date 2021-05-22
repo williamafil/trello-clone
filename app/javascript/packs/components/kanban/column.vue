@@ -1,8 +1,6 @@
 <template>
   <div>
-    <div
-      class="column bg-gray-200 p-2 mr-4 text-left shadow rounded cursor-move"
-    >
+    <div class="column bg-gray-200 p-2 mr-4 text-left shadow rounded">
       <div class="flex items-center mb-2 font-bold">
         {{ column.name }} <span class="text-xs">(id: {{ column.id }})</span>
       </div>
@@ -14,23 +12,12 @@
           @change="dropTicket"
         >
           <column-ticket
-            class="
-              task
-              cursor-pointer
-              flex
-              items-center
-              flex-wrap
-              shadow
-              mb-2
-              py-2
-              px-2
-              rounded
-              bg-white
-              no-underline
+            class="flex items-center flex-wrap shadow mb-2 py-2 px-2 rounded bg-white no-underline
             "
             v-for="ticket in column.tickets"
             :key="ticket.id"
             :ticket="ticket"
+            :kanbanId="column.kanban_id"
           />
         </draggable>
         <input
@@ -86,7 +73,7 @@ export default {
     },
     createTicket(event) {
       this.$store
-        .dispatch("add_ticket", {
+        .dispatch("addTicket", {
           kanbanId: this.kanban_id,
           name: event.target.value,
           columnId: this.column.id,

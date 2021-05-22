@@ -1,15 +1,15 @@
 class ColumnsController < ApplicationController
-  before_action :set_column, only: %i[ drag show edit update destroy ]
+  before_action :set_column, only: %i[drag show edit update destroy]
 
   def drag
-    puts "= = = = = = = DRAG (column id: )"
+    puts '= = = = = = = DRAG (column id: )'
     puts @column.id
-    puts "= = = = = = = params[:position]"
+    puts '= = = = = = = params[:position]'
     puts params[:position]
 
     @column.insert_at(params[:position].to_i)
-    
-    render "show.json"
+
+    render 'show.json'
   end
 
   # GET /columns or /columns.json
@@ -19,8 +19,7 @@ class ColumnsController < ApplicationController
   end
 
   # GET /columns/1 or /columns/1.json
-  def show
-  end
+  def show; end
 
   # GET /columns/new
   def new
@@ -28,8 +27,7 @@ class ColumnsController < ApplicationController
   end
 
   # GET /columns/1/edit
-  def edit
-  end
+  def edit; end
 
   # POST /columns or /columns.json
   def create
@@ -37,7 +35,7 @@ class ColumnsController < ApplicationController
 
     respond_to do |format|
       if @column.save
-        format.html { redirect_to @column, notice: "Column was successfully created." }
+        format.html { redirect_to @column, notice: 'Column was successfully created.' }
         format.json { render :show, status: :created, location: @column }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -50,7 +48,7 @@ class ColumnsController < ApplicationController
   def update
     respond_to do |format|
       if @column.update(column_params)
-        format.html { redirect_to @column, notice: "Column was successfully updated." }
+        format.html { redirect_to @column, notice: 'Column was successfully updated.' }
         format.json { render :show, status: :ok, location: @column }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -63,19 +61,20 @@ class ColumnsController < ApplicationController
   def destroy
     @column.destroy
     respond_to do |format|
-      format.html { redirect_to columns_url, notice: "Column was successfully destroyed." }
+      format.html { redirect_to columns_url, notice: 'Column was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_column
-      @column = Column.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def column_params
-      params.require(:column).permit(:name, :kanban_id, :position)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_column
+    @column = Column.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def column_params
+    params.require(:column).permit(:name, :kanban_id, :position)
+  end
 end

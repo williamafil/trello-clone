@@ -22,9 +22,19 @@ export default new Vuex.Store({
         updated_at: newTicket.updated_at,
       });
     },
+    EDIT_TICKET(state, { tickets, updatedTicket }) {
+      const selectedTicket = tickets.filter(
+        (ticket) => ticket.id === updatedTicket.id,
+      )[0];
+      console.log("selectedTicket: ", selectedTicket);
+      selectedTicket.name = updatedTicket.name;
+    },
+    DELETE_TICKET(state, { tickets, ticketId }) {
+      tickets.splice(ticketId, 1);
+    },
   },
   actions: {
-    get_columns(context, kanbanid) {
+    getColumns(context, kanbanid) {
       axios
         .get(`/kanbans/${kanbanid}/columns.json`)
         .then((res) => {
@@ -34,7 +44,7 @@ export default new Vuex.Store({
           console.log(error.response);
         });
     },
-    add_ticket(context, ticketObj) {
+    addTicket(context, ticketObj) {
       const tickets = context.getters.findColumn(ticketObj.columnId)[0].tickets;
 
       axios
@@ -47,6 +57,43 @@ export default new Vuex.Store({
         })
         .catch((error) => {
           console.log("新增 ticket 失敗: ", error.response);
+        });
+    },
+    editTicket(context, ticketObj) {
+      const tickets = context.getters.findColumn(ticketObj.column_id)[0]
+        .tickets;
+
+      axios
+        .put(`/kanbans/${ticketObj.kanbanId}/tickets/${ticketObj.id}`, {
+          name: ticketObj.name,
+        })
+        .then((res) => {
+          // console.log("update ticket: ", res);
+          context.commit("EDIT_TICKET", { tickets, updatedTicket: res.data });
+        })
+        .catch((error) => {
+          console.log("更新 ticket 失敗: ", error.response);
+        });
+    },
+    deleteTicket(context, ticketObj) {
+      const tickets = context.getters.findColumn(ticketObj.columnId)[0].tickets;
+      const ticketIndex = tickets.findIndex(
+        (ticket) => ticket.id === ticketObj.ticketId,
+      );
+      // console.log("tickets: ", tickets);
+      // console.log("ticketIndex: ", ticketIndex);
+      // console.log("deleteTicket ACTION: ", ticketObj);
+      axios
+        .delete(`/kanbans/${ticketObj.kanbanId}/tickets/${ticketObj.ticketId}`)
+        .then((res) => {
+          // console.log("delete: ", res);
+          context.commit("DELETE_TICKET", {
+            tickets,
+            ticketId: ticketIndex,
+          });
+        })
+        .catch((error) => {
+          console.log("刪除 ticket 失敗: ", error.response);
         });
     },
   },

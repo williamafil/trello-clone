@@ -1,12 +1,12 @@
 <div id="column" class="board p-4 bg-gray-300 h-full overflow-auto" data-kanbanid="<%= @kanban.id %>">
     <div class="board">
       <div class="flex flex-row items-start">
-        <draggable v-model="columns" @change="dropColumn" :move="checkMove">
+        <draggable v-model="columns" @change="dropColumn" :move="checkMove" class="cursor-move">
           <transition-group  class="flex">
             <board-column v-for="column in columns" :column="column" :key="column.id" />
           </transition-group>
         </draggable>  
-        <div class="column bg-gray-200 p-2 mr-4 text-left shadow rounded cursor-move">
+        <div class="column bg-gray-200 p-2 mr-4 text-left shadow rounded">
           <input
             type="text"
             class="p-2 mr-2 flex-grow w-full block rounded bg-gray-100"

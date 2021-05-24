@@ -58,10 +58,17 @@ export default {
     dropTicket(event) {
       const ticketItem = event.added || event.moved;
       if (ticketItem) {
-        const kanban_id = this.column.kanban_id;
-        const column_id = this.column.id;
-        const ticket_id = ticketItem.element.id;
+        const kanbanId = this.column.kanban_id;
+        const columnId = this.column.id;
+        const ticketId = ticketItem.element.id;
+        const newPosition = ticketItem.newIndex + 1;
 
+        // this.$store.dispatch("moveTicket", {
+        //   kanbanId,
+        //   columnId,
+        //   ticketId,
+        //   newPosition,
+        // });
         axios
           .put(`/kanbans/${kanban_id}/tickets/${ticket_id}/drag`, {
             column_id,

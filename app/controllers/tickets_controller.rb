@@ -8,10 +8,19 @@ class TicketsController < ApplicationController
     # position = params[:position]
 
     if @ticket.update(ticket_params)
+      # params = JSON.parse(@ticket.to_json)
+      # ActionCable.server.broadcast('column',
+      #                              { commit: 'EDIT_TICKET', payload: params })
       render json: @ticket, status: :ok
     else
       render json: @ticket.errors, status: :unprocessable_entity
     end
+
+    # if @ticket.update(ticket_params)
+    #   render json: @ticket, status: :ok
+    # else
+    #   render json: @ticket.errors, status: :unprocessable_entity
+    # end
   end
 
   # GET /tickets or /tickets.json
@@ -43,7 +52,21 @@ class TicketsController < ApplicationController
 
   # PATCH/PUT /tickets/1 or /tickets/1.json
   def update
+    # respond_to do |format|
+    #   if @ticket.update(ticket_params)
+    #     # ActionCable.server.broadcast("column", @ticket)
+    #     params = JSON.parse(@ticket.to_json)
+    #     ActionCable.server.broadcast('column',
+    #                                  { commit: 'UPDATE_TICKET', payload: params })
+    #     format.json { render :show, status: :ok }
+    #   else
+    #     format.json { render json: @ticket.errors, status: :unprocessable_entity }
+    #   end
+    # end
     if @ticket.update(ticket_params)
+      params = JSON.parse(@ticket.to_json)
+      ActionCable.server.broadcast('column',
+                                   { commit: 'EDIT_TICKET', payload: params })
       render json: @ticket, status: :ok
     else
       render json: @ticket.errors, status: :unprocessable_entity

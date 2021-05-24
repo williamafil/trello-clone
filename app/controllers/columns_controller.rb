@@ -2,13 +2,15 @@ class ColumnsController < ApplicationController
   before_action :set_column, only: %i[drag show edit update destroy]
 
   def drag
-    puts '= = = = = = = DRAG (column id: )'
-    puts @column.id
-    puts '= = = = = = = params[:position]'
-    puts params[:position]
+    # puts '= = = = = = = DRAG (column id: )'
+    # puts @column.id
+    # puts '= = = = = = = params[:position]'
+    # puts params[:position]
 
     @column.insert_at(params[:position].to_i)
-
+    # params = JSON.parse(@column.to_json)
+    params = JSON.parse(@column.kanban.columns.to_json)
+    ActionCable.server.broadcast('column', { commit: 'REPOSITION_COLUMN', payload: params })
     render 'show.json'
   end
 

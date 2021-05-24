@@ -12,6 +12,28 @@ export default new Vuex.Store({
     UPDATE_COLUMNS(state, columns) {
       state.columns = columns;
     },
+    REPOSITION_COLUMN(state, columns) {
+      // matching state.columns position with columns payload
+      columns.forEach((col) => {
+        const stateColumn = state.columns.filter(
+          (item) => item.id === col.id,
+        )[0];
+        stateColumn.position = col.position;
+      });
+
+      function compare(a, b) {
+        if (a.position < b.position) {
+          return -1;
+        }
+        if (a.position > b.position) {
+          return 1;
+        }
+        return 0;
+      }
+
+      // sort by position
+      state.columns.sort(compare);
+    },
     ADD_TICKET(state, { tickets, newTicket }) {
       tickets.push({
         column_id: newTicket.columnId,
@@ -22,12 +44,19 @@ export default new Vuex.Store({
         updated_at: newTicket.updated_at,
       });
     },
-    EDIT_TICKET(state, { tickets, updatedTicket }) {
-      const selectedTicket = tickets.filter(
+    EDIT_TICKET(state, updatedTicket) {
+      console.log("::: EDIT_TICKET :::");
+      console.log("updatedTicket: ", updatedTicket);
+      const column = state.columns.filter(
+        (col) => col.id === updatedTicket.column_id,
+      )[0];
+      const selectedTicket = column.tickets.filter(
         (ticket) => ticket.id === updatedTicket.id,
       )[0];
       console.log("selectedTicket: ", selectedTicket);
-      selectedTicket.name = updatedTicket.name;
+      Object.keys(selectedTicket).forEach((key) => {
+        selectedTicket[key] = updatedTicket[key];
+      });
     },
     DELETE_TICKET(state, { tickets, ticketId }) {
       tickets.splice(ticketId, 1);
@@ -43,6 +72,23 @@ export default new Vuex.Store({
         .catch((error) => {
           console.log(error.response);
         });
+    },
+    moveColumn(context, kanbanObj) {
+      axios
+        .put(
+          `/kanbans/${kanbanObj.kanbanId}/columns/${kanbanObj.columnId}/drag`,
+          {
+            position: kanbanObj.newPosition,
+          },
+        )
+        .then((res) => {
+          console.log("moveColumn res: ", res.data);
+          // context.commit("REPOSITION_COLUMN", res.data);
+          return;
+        });
+      // .catch((error) => {
+      //   console.log("無法移動 column: ", error.response);
+      // });
     },
     addTicket(context, ticketObj) {
       const tickets = context.getters.findColumn(ticketObj.columnId)[0].tickets;
@@ -68,11 +114,27 @@ export default new Vuex.Store({
           name: ticketObj.name,
         })
         .then((res) => {
-          // console.log("update ticket: ", res);
-          context.commit("EDIT_TICKET", { tickets, updatedTicket: res.data });
+          console.log("updated ticket: ", res.data);
+          // context.commit("EDIT_TICKET", { tickets, updatedTicket: res.data });
         })
         .catch((error) => {
           console.log("更新 ticket 失敗: ", error.response);
+        });
+    },
+    moveTicket(context, ticketObj) {
+      axios
+        .put(
+          `/kanbans/${ticketObj.kanbanId}/tickets/${ticketObj.ticketId}/drag`,
+          {
+            column_id: ticketObj.columnId,
+            position: ticketObj.newPosition,
+          },
+        )
+        .then((res) => {
+          console.log("new ticket position: ", res.data);
+        })
+        .catch((error) => {
+          console.log("移動 ticket 失敗: ", error.response);
         });
     },
     deleteTicket(context, ticketObj) {
@@ -80,13 +142,10 @@ export default new Vuex.Store({
       const ticketIndex = tickets.findIndex(
         (ticket) => ticket.id === ticketObj.ticketId,
       );
-      // console.log("tickets: ", tickets);
-      // console.log("ticketIndex: ", ticketIndex);
-      // console.log("deleteTicket ACTION: ", ticketObj);
+
       axios
         .delete(`/kanbans/${ticketObj.kanbanId}/tickets/${ticketObj.ticketId}`)
         .then((res) => {
-          // console.log("delete: ", res);
           context.commit("DELETE_TICKET", {
             tickets,
             ticketId: ticketIndex,

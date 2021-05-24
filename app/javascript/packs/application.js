@@ -15,6 +15,9 @@ require("channels");
 const images = require.context("../images", true);
 const imagePath = (name) => images(name, true);
 
+// import $ from "jquery";
+// window.$ = $;
+
 import "../stylesheets";
 
 // Vue
@@ -53,6 +56,7 @@ document.addEventListener("turbolinks:load", () => {
   let el = document.querySelector("#column");
 
   if (el) {
+    window.$store = store;
     new Vue({
       el,
       store,
@@ -69,18 +73,25 @@ document.addEventListener("turbolinks:load", () => {
       },
       methods: {
         dropColumn(event) {
-          const kanban_id = event.moved.element.kanban_id;
-          const column_id = event.moved.element.id;
-          axios
-            .put(`/kanbans/${kanban_id}/columns/${column_id}/drag`, {
-              position: event.moved.newIndex + 1,
-            })
-            .then((res) => {
-              console.log("drag res: ", res);
-            })
-            .catch((error) => {
-              console.log("無法移動 column: ", error.response);
-            });
+          const kanbanId = event.moved.element.kanban_id;
+          const columnId = event.moved.element.id;
+          const newPosition = event.moved.newIndex + 1;
+
+          this.$store.dispatch("moveColumn", {
+            kanbanId,
+            columnId,
+            newPosition,
+          });
+          // axios
+          //   .put(`/kanbans/${kanbanId}/columns/${columnId}/drag`, {
+          //     position: newPosition,
+          //   })
+          //   .then((res) => {
+          //     console.log("drag res: ", res);
+          //   })
+          //   .catch((error) => {
+          //     console.log("無法移動 column: ", error.response);
+          //   });
         },
         checkMove(event) {
           console.log("checkMove event: ", event);

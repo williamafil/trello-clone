@@ -1,8 +1,6 @@
 class PagesController < ApplicationController
   def index
-    if current_user
-      redirect_to dashboard_path
-    end 
+    redirect_to dashboard_path if current_user
   end
 
   def dashboard

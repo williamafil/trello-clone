@@ -56,26 +56,31 @@ export default {
   },
   methods: {
     dropTicket(event) {
+      console.log("dropTicket event: ", event);
+
       const ticketItem = event.added || event.moved;
       if (ticketItem) {
+        const [behavior] = Object.keys(event);
+        console.log("behavior：", behavior);
         const kanbanId = this.column.kanban_id;
         const columnId = this.column.id;
         const ticketId = ticketItem.element.id;
         const newPosition = ticketItem.newIndex + 1;
 
-        // this.$store.dispatch("moveTicket", {
-        //   kanbanId,
-        //   columnId,
-        //   ticketId,
-        //   newPosition,
-        // });
-        axios
-          .put(`/kanbans/${kanban_id}/tickets/${ticket_id}/drag`, {
-            column_id,
-            position: ticketItem.newIndex + 1,
-          })
-          .then((res) => {})
-          .catch((error) => {});
+        this.$store.dispatch("moveTicket", {
+          behavior,
+          kanbanId,
+          columnId,
+          ticketId,
+          newPosition,
+        });
+        // axios
+        //   .put(`/kanbans/${kanbanId}/tickets/${ticketId}/drag`, {
+        //     columnId,
+        //     position: ticketItem.newIndex + 1,
+        //   })
+        //   .then((res) => {})
+        //   .catch((error) => {});
       }
     },
     createTicket(event) {

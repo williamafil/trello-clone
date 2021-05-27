@@ -4,6 +4,16 @@ import axios from "axios-on-rails";
 
 Vue.use(Vuex);
 
+function compare(a, b) {
+  if (a.position < b.position) {
+    return -1;
+  }
+  if (a.position > b.position) {
+    return 1;
+  }
+  return 0;
+}
+
 export default new Vuex.Store({
   state: {
     columns: [],
@@ -13,25 +23,13 @@ export default new Vuex.Store({
       state.columns = columns;
     },
     REPOSITION_COLUMN(state, columns) {
-      // matching state.columns position with columns payload
+      // DESC: matching state.columns position with columns payload
       columns.forEach((col) => {
         const stateColumn = state.columns.filter(
           (item) => item.id === col.id,
         )[0];
         stateColumn.position = col.position;
       });
-
-      function compare(a, b) {
-        if (a.position < b.position) {
-          return -1;
-        }
-        if (a.position > b.position) {
-          return 1;
-        }
-        return 0;
-      }
-
-      // sort by position
       state.columns.sort(compare);
     },
     ADD_TICKET(state, { tickets, newTicket }) {
@@ -44,23 +42,91 @@ export default new Vuex.Store({
         updated_at: newTicket.updated_at,
       });
     },
-    EDIT_TICKET(state, updatedTicket) {
-      console.log("::: EDIT_TICKET :::");
-      console.log("updatedTicket: ", updatedTicket);
-      const column = state.columns.filter(
-        (col) => col.id === updatedTicket.column_id,
-      )[0];
-      const selectedTicket = column.tickets.filter(
-        (ticket) => ticket.id === updatedTicket.id,
-      )[0];
-      console.log("selectedTicket: ", selectedTicket);
-      Object.keys(selectedTicket).forEach((key) => {
-        selectedTicket[key] = updatedTicket[key];
+    REORDER_TICKET(state, ticketObj) {
+      const origColumnIdx = state.columns.findIndex(
+        (column) => column.id === ticketObj.ticket.column_id,
+      );
+      state.columns[origColumnIdx].tickets.forEach((ticket) => {
+        const [newObj] = ticketObj.newTickets.filter(
+          (newTicket) => newTicket.id === ticket.id,
+        );
+        ticket.position = newObj.position;
       });
+
+      state.columns[origColumnIdx].tickets.sort(compare);
     },
-    DELETE_TICKET(state, { tickets, ticketId }) {
-      tickets.splice(ticketId, 1);
+    TRANSFER_TICKET(state, ticketObj) {
+      // DESC: LOOKUP OLD TICKET ID FROM OLD COLUMN, REMOVE IT IF EXIST
+      const origColumnIdx = state.columns.findIndex(
+        (column) => column.id === ticketObj.old_column_id,
+      );
+      const origTicketIdx = state.columns[origColumnIdx].tickets.findIndex(
+        (ticket) => ticket.id === ticketObj.ticket.id,
+      );
+      if (origTicketIdx === -1) {
+        return;
+      } else {
+        state.columns[origColumnIdx].tickets.splice(origTicketIdx, 1);
+      }
+      // DESC: RE-ASSIGN POSITION TO TICKETS IN OLD COLUMN AND RE-ORDER THEM ASC BY POSITION
+      state.columns[origColumnIdx].tickets.forEach((ticket) => {
+        const [oldObj] = ticketObj.oldTickets.filter(
+          (oldTicket) => oldTicket.id === ticket.id,
+        );
+        ticket.position = oldObj.position;
+      });
+      state.columns[origColumnIdx].tickets.sort(compare);
+
+      // DESC: INSERT NEW TICKET OBJ TO NEW COLUMN TICKETS ARRAY
+      const newColumnIdx = state.columns.findIndex(
+        (column) => column.id === ticketObj.ticket.column_id,
+      );
+      state.columns[newColumnIdx].tickets.push(ticketObj.ticket);
+
+      // DESC: RE-ASSIGN POSITION TO TICKETS IN NEW COLUMN AND RE-ORDER THEM ASC BY POSITION
+      state.columns[newColumnIdx].tickets.forEach((ticket) => {
+        const [newObj] = ticketObj.newTickets.filter(
+          (newTicket) => newTicket.id === ticket.id,
+        );
+        ticket.position = newObj.position;
+      });
+      state.columns[newColumnIdx].tickets.sort(compare);
     },
+    // EDIT_TICKET(state, { tickets, updatedTicket }) {
+    //   const selectedTicket = tickets.filter(
+    //     (ticket) => ticket.id === updatedTicket.id,
+    //   )[0];
+    //   console.log("selectedTicket: ", selectedTicket);
+    //   selectedTicket.name = updatedTicket.name;
+    // },
+
+    EDIT_TICKET(state, ticketObj) {
+      console.log("ticketObj: ", ticketObj);
+      const origColumnIdx = state.columns.findIndex(
+        (column) => column.id === ticketObj.column_id,
+      );
+      const [ticket] = state.columns[origColumnIdx].tickets.filter(
+        (ticket) => ticket.id === ticketObj.id,
+      );
+      ticket.name = ticketObj.name;
+    },
+    DELETE_TICKET(state, ticketObj) {
+      // DESC: LOOKUP OLD TICKET ID FROM OLD COLUMN, REMOVE IT IF EXIST
+      const origColumnIdx = state.columns.findIndex(
+        (column) => column.id === ticketObj.column_id,
+      );
+      const origTicketIdx = state.columns[origColumnIdx].tickets.findIndex(
+        (ticket) => ticket.id === ticketObj.id,
+      );
+      if (origTicketIdx === -1) {
+        return;
+      } else {
+        state.columns[origColumnIdx].tickets.splice(origTicketIdx, 1);
+      }
+    },
+    // DELETE_TICKET(state, { tickets, ticketId }) {
+    //   tickets.splice(ticketId, 1);
+    // },
   },
   actions: {
     getColumns(context, kanbanid) {
@@ -126,6 +192,7 @@ export default new Vuex.Store({
         .put(
           `/kanbans/${ticketObj.kanbanId}/tickets/${ticketObj.ticketId}/drag`,
           {
+            behavior: ticketObj.behavior,
             column_id: ticketObj.columnId,
             position: ticketObj.newPosition,
           },
@@ -146,10 +213,10 @@ export default new Vuex.Store({
       axios
         .delete(`/kanbans/${ticketObj.kanbanId}/tickets/${ticketObj.ticketId}`)
         .then((res) => {
-          context.commit("DELETE_TICKET", {
-            tickets,
-            ticketId: ticketIndex,
-          });
+          // context.commit("DELETE_TICKET", {
+          //   tickets,
+          //   ticketId: ticketIndex,
+          // });
         })
         .catch((error) => {
           console.log("刪除 ticket 失敗: ", error.response);

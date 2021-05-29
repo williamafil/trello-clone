@@ -25,15 +25,18 @@ export default new Vuex.Store({
     REPOSITION_COLUMN(state, columns) {
       // DESC: matching state.columns position with columns payload
       columns.forEach((col) => {
-        const stateColumn = state.columns.filter(
+        const [stateColumn] = state.columns.filter(
           (item) => item.id === col.id,
-        )[0];
+        );
         stateColumn.position = col.position;
       });
       state.columns.sort(compare);
     },
-    ADD_TICKET(state, { tickets, newTicket }) {
-      tickets.push({
+    ADD_TICKET(state, newTicket) {
+      const origColumnIdx = state.columns.findIndex(
+        (column) => column.id === newTicket.column_id,
+      );
+      state.columns[origColumnIdx].tickets.push({
         column_id: newTicket.columnId,
         name: newTicket.name,
         id: newTicket.id,
@@ -92,13 +95,6 @@ export default new Vuex.Store({
       });
       state.columns[newColumnIdx].tickets.sort(compare);
     },
-    // EDIT_TICKET(state, { tickets, updatedTicket }) {
-    //   const selectedTicket = tickets.filter(
-    //     (ticket) => ticket.id === updatedTicket.id,
-    //   )[0];
-    //   console.log("selectedTicket: ", selectedTicket);
-    //   selectedTicket.name = updatedTicket.name;
-    // },
 
     EDIT_TICKET(state, ticketObj) {
       console.log("ticketObj: ", ticketObj);
@@ -124,9 +120,6 @@ export default new Vuex.Store({
         state.columns[origColumnIdx].tickets.splice(origTicketIdx, 1);
       }
     },
-    // DELETE_TICKET(state, { tickets, ticketId }) {
-    //   tickets.splice(ticketId, 1);
-    // },
   },
   actions: {
     getColumns(context, kanbanid) {
@@ -165,7 +158,7 @@ export default new Vuex.Store({
           column_id: ticketObj.columnId,
         })
         .then((res) => {
-          context.commit("ADD_TICKET", { tickets, newTicket: res.data });
+          // context.commit("ADD_TICKET", { tickets, newTicket: res.data });
         })
         .catch((error) => {
           console.log("新增 ticket 失敗: ", error.response);

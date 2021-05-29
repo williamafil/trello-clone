@@ -4,8 +4,8 @@ class ColumnsController < ApplicationController
   def drag
     # puts '= = = = = = = DRAG (column id: )'
     # puts @column.id
-    # puts '= = = = = = = params[:position]'
-    # puts params[:position]
+    puts '= = = = = = = params[:position]'
+    puts params[:position].to_i
 
     @column.insert_at(params[:position].to_i)
     # params = JSON.parse(@column.to_json)

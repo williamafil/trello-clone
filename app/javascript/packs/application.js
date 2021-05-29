@@ -76,7 +76,7 @@ document.addEventListener("turbolinks:load", () => {
           const kanbanId = event.moved.element.kanban_id;
           const columnId = event.moved.element.id;
           const newPosition = event.moved.newIndex + 1;
-
+          console.log("新的 column.position: ", newPosition);
           this.$store.dispatch("moveColumn", {
             kanbanId,
             columnId,

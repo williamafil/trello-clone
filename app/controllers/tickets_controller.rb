@@ -53,6 +53,12 @@ class TicketsController < ApplicationController
     @ticket = Ticket.new(ticket_params)
 
     if @ticket.save
+      ticket = JSON.parse(@ticket.to_json)
+      puts "= = = = "
+      puts ticket
+      puts "= = = = "
+      ActionCable.server.broadcast('column',
+                                   { commit: 'ADD_TICKET', payload: ticket })
       render json: @ticket, status: :ok
     else
       render json: @ticket.errors, status: :unprocessable_entity
@@ -61,17 +67,6 @@ class TicketsController < ApplicationController
 
   # PATCH/PUT /tickets/1 or /tickets/1.json
   def update
-    # respond_to do |format|
-    #   if @ticket.update(ticket_params)
-    #     # ActionCable.server.broadcast("column", @ticket)
-    #     params = JSON.parse(@ticket.to_json)
-    #     ActionCable.server.broadcast('column',
-    #                                  { commit: 'UPDATE_TICKET', payload: params })
-    #     format.json { render :show, status: :ok }
-    #   else
-    #     format.json { render json: @ticket.errors, status: :unprocessable_entity }
-    #   end
-    # end
     if @ticket.update(ticket_params)
       ticket = JSON.parse(@ticket.to_json)
       ActionCable.server.broadcast('column',
@@ -92,12 +87,6 @@ class TicketsController < ApplicationController
     else
       render json: @ticket.errors, status: :unprocessable_entity
     end
-
-    # @ticket.destroy
-    # respond_to do |format|
-    #   format.html { redirect_to tickets_url, notice: 'Ticket was successfully destroyed.' }
-    #   format.json { head :no_content }
-    # end
   end
 
   private

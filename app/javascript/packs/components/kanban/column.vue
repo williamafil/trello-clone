@@ -61,7 +61,7 @@ export default {
       const ticketItem = event.added || event.moved;
       if (ticketItem) {
         const [behavior] = Object.keys(event);
-        console.log("behavior：", behavior);
+        // console.log("behavior：", behavior);
         const kanbanId = this.column.kanban_id;
         const columnId = this.column.id;
         const ticketId = ticketItem.element.id;
@@ -74,13 +74,6 @@ export default {
           ticketId,
           newPosition,
         });
-        // axios
-        //   .put(`/kanbans/${kanbanId}/tickets/${ticketId}/drag`, {
-        //     columnId,
-        //     position: ticketItem.newIndex + 1,
-        //   })
-        //   .then((res) => {})
-        //   .catch((error) => {});
       }
     },
     createTicket(event) {

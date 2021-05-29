@@ -17,8 +17,19 @@ function compare(a, b) {
 export default new Vuex.Store({
   state: {
     columns: [],
+    route: null,
   },
   mutations: {
+    SET_ROUTE(state, route) {
+      state.route = route;
+    },
+    ADD_COLUMN(state, column) {
+      console.log("state.route: ", parseInt(state.route));
+      console.log("kanban_id: ", column.kanban_id);
+      if (parseInt(state.route) === column.kanban_id) {
+        state.columns.push(column);
+      }
+    },
     UPDATE_COLUMNS(state, columns) {
       state.columns = columns;
     },
@@ -122,6 +133,20 @@ export default new Vuex.Store({
     },
   },
   actions: {
+    setRoute(context, route) {
+      context.commit("SET_ROUTE", route);
+    },
+    addColumn(context, columnObj) {
+      axios
+        .post(`/kanbans/${columnObj.kanbanId}/columns`, {
+          name: columnObj.name,
+          kanban_id: columnObj.kanbanId,
+        })
+        .then((res) => console.log("create column res: ", res))
+        .catch((error) => {
+          console.log("無法新增 column: ", error.response);
+        });
+    },
     getColumns(context, kanbanid) {
       axios
         .get(`/kanbans/${kanbanid}/columns.json`)
@@ -144,10 +169,10 @@ export default new Vuex.Store({
           console.log("moveColumn res: ", res.data);
           // context.commit("REPOSITION_COLUMN", res.data);
           return;
+        })
+        .catch((error) => {
+          console.log("無法移動 column: ", error.response);
         });
-      // .catch((error) => {
-      //   console.log("無法移動 column: ", error.response);
-      // });
     },
     addTicket(context, ticketObj) {
       const tickets = context.getters.findColumn(ticketObj.columnId)[0].tickets;

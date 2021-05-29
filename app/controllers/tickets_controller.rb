@@ -54,9 +54,6 @@ class TicketsController < ApplicationController
 
     if @ticket.save
       ticket = JSON.parse(@ticket.to_json)
-      puts "= = = = "
-      puts ticket
-      puts "= = = = "
       ActionCable.server.broadcast('column',
                                    { commit: 'ADD_TICKET', payload: ticket })
       render json: @ticket, status: :ok

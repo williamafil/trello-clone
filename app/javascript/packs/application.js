@@ -70,6 +70,7 @@ document.addEventListener("turbolinks:load", () => {
       },
       beforeMount() {
         this.$store.dispatch("getColumns", this.kanban_id);
+        this.$store.dispatch("setRoute", this.kanban_id);
       },
       methods: {
         dropColumn(event) {
@@ -82,22 +83,20 @@ document.addEventListener("turbolinks:load", () => {
             columnId,
             newPosition,
           });
-          // axios
-          //   .put(`/kanbans/${kanbanId}/columns/${columnId}/drag`, {
-          //     position: newPosition,
-          //   })
-          //   .then((res) => {
-          //     console.log("drag res: ", res);
-          //   })
-          //   .catch((error) => {
-          //     console.log("無法移動 column: ", error.response);
-          //   });
         },
         checkMove(event) {
           console.log("checkMove event: ", event);
         },
         createColumn() {
-          // console.log("columnd id: ", this.columnd.id);
+          this.$store
+            .dispatch("addColumn", {
+              kanbanId: this.kanban_id,
+              name: this.newColumnName,
+            })
+            .then((res) => {
+              console.log("res: ", res);
+              this.newColumnName = "";
+            });
         },
       },
       computed: {

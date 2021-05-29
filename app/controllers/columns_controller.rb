@@ -2,13 +2,7 @@ class ColumnsController < ApplicationController
   before_action :set_column, only: %i[drag show edit update destroy]
 
   def drag
-    # puts '= = = = = = = DRAG (column id: )'
-    # puts @column.id
-    puts '= = = = = = = params[:position]'
-    puts params[:position].to_i
-
     @column.insert_at(params[:position].to_i)
-    # params = JSON.parse(@column.to_json)
     params = JSON.parse(@column.kanban.columns.to_json)
     ActionCable.server.broadcast('column', { commit: 'REPOSITION_COLUMN', payload: params })
     render 'show.json'
@@ -34,15 +28,13 @@ class ColumnsController < ApplicationController
   # POST /columns or /columns.json
   def create
     @column = Column.new(column_params)
-
-    respond_to do |format|
-      if @column.save
-        format.html { redirect_to @column, notice: 'Column was successfully created.' }
-        format.json { render :show, status: :created, location: @column }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @column.errors, status: :unprocessable_entity }
-      end
+    if @column.save
+      column = JSON.parse(@column.to_json)
+        ActionCable.server.broadcast('column',
+                                    { commit: 'ADD_COLUMN', payload: column })
+      render json: @column, status: :ok
+    else
+      render json: @column.errors, status: :unprocessable_entity
     end
   end
 

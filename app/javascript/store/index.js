@@ -27,6 +27,7 @@ export default new Vuex.Store({
       console.log("state.route: ", parseInt(state.route));
       console.log("kanban_id: ", column.kanban_id);
       if (parseInt(state.route) === column.kanban_id) {
+        column.tickets = [];
         state.columns.push(column);
       }
     },
@@ -47,14 +48,16 @@ export default new Vuex.Store({
       const origColumnIdx = state.columns.findIndex(
         (column) => column.id === newTicket.column_id,
       );
-      state.columns[origColumnIdx].tickets.push({
-        column_id: newTicket.columnId,
-        name: newTicket.name,
-        id: newTicket.id,
-        position: newTicket.position,
-        created_at: newTicket.created_at,
-        updated_at: newTicket.updated_at,
-      });
+      if (origColumnIdx !== -1) {
+        state.columns[origColumnIdx].tickets.push({
+          column_id: newTicket.columnId,
+          name: newTicket.name,
+          id: newTicket.id,
+          position: newTicket.position,
+          created_at: newTicket.created_at,
+          updated_at: newTicket.updated_at,
+        });
+      }
     },
     REORDER_TICKET(state, ticketObj) {
       const origColumnIdx = state.columns.findIndex(
@@ -112,23 +115,25 @@ export default new Vuex.Store({
       const origColumnIdx = state.columns.findIndex(
         (column) => column.id === ticketObj.column_id,
       );
-      const [ticket] = state.columns[origColumnIdx].tickets.filter(
-        (ticket) => ticket.id === ticketObj.id,
-      );
-      ticket.name = ticketObj.name;
+      if (origColumnIdx !== -1) {
+        const [ticket] = state.columns[origColumnIdx].tickets.filter(
+          (ticket) => ticket.id === ticketObj.id,
+        );
+        ticket.name = ticketObj.name;
+      }
     },
     DELETE_TICKET(state, ticketObj) {
       // DESC: LOOKUP OLD TICKET ID FROM OLD COLUMN, REMOVE IT IF EXIST
       const origColumnIdx = state.columns.findIndex(
         (column) => column.id === ticketObj.column_id,
       );
-      const origTicketIdx = state.columns[origColumnIdx].tickets.findIndex(
-        (ticket) => ticket.id === ticketObj.id,
-      );
-      if (origTicketIdx === -1) {
-        return;
-      } else {
-        state.columns[origColumnIdx].tickets.splice(origTicketIdx, 1);
+      if (origColumnIdx !== -1) {
+        const origTicketIdx = state.columns[origColumnIdx].tickets.findIndex(
+          (ticket) => ticket.id === ticketObj.id,
+        );
+        if (origTicketIdx !== -1) {
+          state.columns[origColumnIdx].tickets.splice(origTicketIdx, 1);
+        }
       }
     },
   },
@@ -190,8 +195,8 @@ export default new Vuex.Store({
         });
     },
     editTicket(context, ticketObj) {
-      const tickets = context.getters.findColumn(ticketObj.column_id)[0]
-        .tickets;
+      // const tickets = context.getters.findColumn(ticketObj.column_id)[0]
+      //   .tickets;
 
       axios
         .put(`/kanbans/${ticketObj.kanbanId}/tickets/${ticketObj.id}`, {

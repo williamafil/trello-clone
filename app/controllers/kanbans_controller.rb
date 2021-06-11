@@ -1,3 +1,4 @@
+
 class KanbansController < ApplicationController
   before_action :set_kanban, only: %i[ show edit update destroy ]
 

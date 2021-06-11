@@ -1,16 +1,16 @@
 <template>
   <div>
-    <div class="flex items-center">
+    <div class="flex items-center relative">
       <div v-if="isEditMenu" class="flex items-center">
-        <div class="text-xs font-light">
+        <div class="text-xs font-light absolute top-0 right-4 w-20 z-50">
           <span
             @click="toggleDeleteTicket"
-            class="p-1 border rounded hover:bg-gray-100"
+            class="p-1 border-2 border-gray-400 rounded hover:bg-gray-200 bg-white"
             >刪除</span
           >
           <span
             @click="toggleEditTicket"
-            class="p-1 border rounded hover:bg-gray-100"
+            class="p-1 border-2 border-gray-400 rounded hover:bg-gray-200 bg-white"
           >
             編輯
           </span>

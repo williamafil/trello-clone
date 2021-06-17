@@ -10,24 +10,27 @@
   </head>
 
 
-  <body class="antialiased" x-data="{ isOpen : false}">
-
+  <body class="antialiased h-full">
+    <div class="flex flex-col h-screen">
     <!-- header -->
-    <%= render "shared/navbar" %>
+    <header class="header h-16 bg-coolGray-50 w-full items-center justify-center z-50 shadow flex flex-initial">
+      <%= render "shared/navbar" %>
+    </header>
     <!-- end header -->
 
     <!-- notice -->
-    <%= render "shared/flash" if notice %>  
+    <section class="flex flex-none">
+      <%= render "shared/flash" if notice %>  
+    </section>
     <!-- end notice -->
 
-          <div class="overflow-auto h-full">
-        <%= yield %>    
-      </div>
-        
-    
-   
- 
-<script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.3.5/dist/alpine.min.js" defer></script>
+    <div class="flex flex-auto">
+      <%= yield %>    
+    </div>
+
 </body>
 
 </html>
+
+
+

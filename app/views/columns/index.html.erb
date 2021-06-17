@@ -1,20 +1,22 @@
-<div id="column" class="board p-4 bg-gray-300 h-full overflow-auto" data-kanbanid="<%= @kanban.id %>">
-  <div class="">
+<div id="column" class="h-full bg-trueGray-100 w-full overflow-auto" data-kanbanid="<%= @kanban.id %>">
+  <div class="board p-4 bg-gray-100 h-full w-full">
     <div class="flex flex-row items-start">
       <draggable v-model="columns" @change="dropColumn" :move="checkMove" class="">
         <transition-group  class="flex">
           <board-column v-for="column in columns" :column="column" :key="column.id" />
         </transition-group>
       </draggable>  
-      <div class="column bg-gray-200 p-2 mr-4 text-left shadow rounded">
+      <div class="column bg-gray-200 p-2 text-left shadow rounded border-2 border-coolGray-300">
+        <h4 class="mb-2 font-bold">New Column</h4>
         <input
           type="text"
           class="p-2 mr-2 flex-grow w-full block rounded bg-gray-100"
           v-model="newColumnName"
-          placeholder="new column name"
+          placeholder="Enter new column name..."
           @keyup.enter="createColumn"
         />
       </div>
+      <div class="spacer"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="></div>
     </div>
   </div>
 </div>

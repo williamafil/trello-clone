@@ -4,9 +4,7 @@
       class="column cursor-move bg-gray-200 p-2 mr-4 text-left shadow rounded"
     >
       <div class="flex justify-between items-center mb-2 font-bold">
-        <h2 class="ml-1">
-          {{ column.name }} <span class="text-xs">(id: {{ column.id }})</span>
-        </h2>
+        <h2 class="ml-1">{{ column.name }} <span class="text-xs"></span></h2>
         <div>
           <edit-menu
             @click="toggleIsEdit"
@@ -111,7 +109,7 @@ export default {
 
 <style lang="scss" scoped>
 // .column {
-//   @apply bg-gray-100 mx-2 w-64 rounded;
+//   @apply bg-gray-100 mx-2 w-64 rounded mr-4;
 
 //   .column-name {
 //     @apply font-thin px-3 py-2;

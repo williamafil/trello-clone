@@ -1,7 +1,22 @@
+console.log("tailwind.config.js loaded");
+
+const colors = require("tailwindcss/colors");
+
 module.exports = {
   future: {},
   purge: [],
   theme: {
+    colors: {
+      transparent: "transparent",
+      current: "currentColor",
+      black: colors.black,
+      white: colors.white,
+      gray: colors.trueGray,
+      indigo: colors.indigo,
+      red: colors.rose,
+      yellow: colors.amber,
+      orange: colors.orange,
+    },
     extend: {
       zIndex: {
         "0": 0,

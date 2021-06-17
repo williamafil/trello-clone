@@ -9,14 +9,25 @@
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
 
-  <body>
-    <section class="flex flex-col h-screen overflow-hidden">
-      <%= render "shared/navbar" %>
-      <%= render "shared/flash" if notice %>  
-      
-      <div class="overflow-auto h-full">
+
+  <body class="antialiased" x-data="{ isOpen : false}">
+
+    <!-- header -->
+    <%= render "shared/navbar" %>
+    <!-- end header -->
+
+    <!-- notice -->
+    <%= render "shared/flash" if notice %>  
+    <!-- end notice -->
+
+          <div class="overflow-auto h-full">
         <%= yield %>    
       </div>
-    </section>
-  </body>
+        
+    
+   
+ 
+<script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.3.5/dist/alpine.min.js" defer></script>
+</body>
+
 </html>

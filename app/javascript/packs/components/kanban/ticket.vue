@@ -3,7 +3,12 @@
     class="ticket cursor-move w-full flex-shrink-0 font-bold justify-between"
   >
     <div>{{ ticket.name }}</div>
-    <edit-menu @click="toggleIsEdit" :ticket="ticket" :kanbanId="kanbanId" />
+    <edit-menu
+      @click="toggleIsEdit"
+      :ticket="ticket"
+      :kanbanId="kanbanId"
+      class="cursor-pointer"
+    />
   </span>
 </template>
 

@@ -33,7 +33,7 @@
       style="background: rgba(0,0,0,.4);"
     >
       <div
-        class="border border-blue-500 modal-container bg-white w-4/12 md:max-w-11/12 mx-auto rounded-xl shadow-lg z-50 overflow-y-auto"
+        class="border-4 border-warmGray-300 modal-container bg-white w-4/12 md:max-w-11/12 mx-auto rounded-lg shadow-lg z-50 overflow-y-auto"
       >
         <div class="modal-content py-4 text-left px-6">
           <!--Title-->
@@ -107,7 +107,7 @@
       style="background: rgba(0,0,0,.4);"
     >
       <div
-        class="border border-blue-500 modal-container bg-white w-4/12 md:max-w-11/12 mx-auto rounded-xl shadow-lg z-50 overflow-y-auto"
+        class="border-4 border-warmGray-300 modal-container bg-white w-4/12 md:max-w-11/12 mx-auto rounded-lg shadow-lg z-50 overflow-y-auto"
       >
         <div class="modal-content py-4 text-left px-6">
           <!--Title-->

@@ -4,12 +4,12 @@
       <div v-if="isEditMenu" class="flex items-center">
         <div class="text-xs font-light absolute top-0 right-4 w-20 z-50">
           <span
-            @click="toggleDeleteTicket"
+            @click="toggleDeleteElement"
             class="p-1 border-2 border-gray-400 rounded hover:bg-gray-200 bg-white"
             >刪除</span
           >
           <span
-            @click="toggleEditTicket"
+            @click="toggleEditElement"
             class="p-1 border-2 border-gray-400 rounded hover:bg-gray-200 bg-white"
           >
             編輯
@@ -28,8 +28,8 @@
     </div>
 
     <section
-      v-if="isEditTicket"
-      class="cursor-auto main-modal fixed w-full inset-0 z-100 overflow-hidden flex justify-center items-center animated fadeIn faster"
+      v-if="isEditElement"
+      class="z-1000 cursor-auto main-modal fixed w-full inset-0 overflow-hidden flex justify-center items-center animated fadeIn faster"
       style="background: rgba(0,0,0,.4);"
     >
       <div
@@ -41,7 +41,7 @@
             <p class="text-xl font-bold text-gray-500">編輯</p>
             <div
               class="cursor-pointer modal-close z-100"
-              @click="toggleEditTicket"
+              @click="toggleEditElement"
             >
               <svg
                 class="fill-current text-gray-500"
@@ -66,12 +66,12 @@
               <div class="">
                 <div class="">
                   <label for="names" class="text-md text-gray-600"
-                    >Ticket Name</label
+                    >{{ column ? "Column" : "Ticket" }} Name</label
                   >
                 </div>
                 <div class="">
                   <input
-                    v-model="ticketDraft.name"
+                    v-model="dynamicDraft.name"
                     type="text"
                     id="name"
                     autocomplete="off"
@@ -84,7 +84,7 @@
             <!--Footer-->
             <div class="flex justify-center">
               <button
-                @click="toggleEditTicket"
+                @click="toggleEditElement"
                 class="px-4 py-2 bg-gray-200 rounded text-gray-700 hover:bg-gray-300 font-normal text-sm"
               >
                 取消
@@ -102,7 +102,7 @@
     </section>
 
     <section
-      v-if="isDeleteTicket"
+      v-if="isDeleteElement"
       class="cursor-auto main-modal fixed w-full inset-0 z-100 overflow-hidden flex justify-center items-center animated fadeIn faster"
       style="background: rgba(0,0,0,.4);"
     >
@@ -115,7 +115,7 @@
             <p class="text-xl font-bold text-gray-500"></p>
             <div
               class="cursor-pointer modal-close z-100"
-              @click="toggleDeleteTicket"
+              @click="toggleDeleteElement"
             >
               <svg
                 class="fill-current text-gray-500"
@@ -133,12 +133,14 @@
           <!--Body-->
 
           <div class="mt-2 mb-9 mr-5 ml-5 flex justify-center">
-            <p class="font-medium text-lg">確定要刪除？</p>
+            <p class="font-medium text-lg">
+              確定要刪除這個{{ column ? "Column" : "Ticket" }}？
+            </p>
           </div>
           <!--Footer-->
           <div class="flex justify-center">
             <button
-              @click="toggleDeleteTicket"
+              @click="toggleDeleteElement"
               class="px-4 py-2 bg-gray-200 rounded text-gray-700 hover:bg-gray-300 font-normal text-sm"
             >
               取消
@@ -160,11 +162,16 @@
 import VerticalDots from "../icons/VerticalDots";
 
 export default {
+  name: "EditMenu",
   components: { VerticalDots },
   props: {
     ticket: {
       type: Object,
-      require: true,
+      default: null,
+    },
+    column: {
+      type: Object,
+      default: null,
     },
     kanbanId: {
       type: [Number, String],
@@ -174,43 +181,80 @@ export default {
   data() {
     return {
       isEditMenu: false,
-      isEditTicket: false,
-      isDeleteTicket: false,
+      isEditElement: false,
+      // isEditTicket: false,
+      // isDeleteTicket: false,
+      isDeleteElement: false,
+      // ticketDraft: Object.assign({}, this.ticket),
       ticketDraft: Object.assign({}, this.ticket),
+      columnDraft: Object.assign({}, this.column),
     };
   },
   methods: {
     submitDelete() {
-      this.$store
-        .dispatch("deleteTicket", {
+      if (this.ticket) {
+        return this.$store
+          .dispatch("deleteTicket", {
+            kanbanId: this.kanbanId,
+            columnId: this.ticket.column_id,
+            ticketId: this.ticket.id,
+          })
+          .then(() => {
+            this.isDeleteElement = false;
+          });
+      }
+      // console.log("this.column: ", this.column);
+      return this.$store
+        .dispatch("deleteColumn", {
           kanbanId: this.kanbanId,
-          columnId: this.ticket.column_id,
-          ticketId: this.ticket.id,
+          columnId: this.column.id,
         })
         .then(() => {
-          this.isDeleteTicket = false;
+          this.isDeleteElement = false;
         });
     },
     submitEdit(event) {
-      this.$store
-        .dispatch("editTicket", {
+      if (this.ticket) {
+        return this.$store
+          .dispatch("editTicket", {
+            kanbanId: this.kanbanId,
+            ...this.ticketDraft,
+          })
+          .then(() => {
+            this.isEditElement = false;
+            // this.isEditTicket = false;
+          });
+      }
+      return this.$store
+        .dispatch("updateColumn", {
           kanbanId: this.kanbanId,
-          ...this.ticketDraft,
+          ...this.columnDraft,
         })
         .then(() => {
-          this.isEditTicket = false;
+          this.isEditElement = false;
+          // this.isEditTicket = false;
         });
     },
-    toggleDeleteTicket() {
-      this.isDeleteTicket = !this.isDeleteTicket;
+    toggleDeleteElement() {
+      this.isDeleteElement = !this.isDeleteElement;
       this.isEditMenu = false;
     },
-    toggleEditTicket() {
-      this.isEditTicket = !this.isEditTicket;
+    toggleEditElement() {
+      // this.isEditTicket = !this.isEditTicket;
+      this.isEditElement = !this.isEditElement;
       this.isEditMenu = false;
     },
     toggleIsEdit() {
       this.isEditMenu = !this.isEditMenu;
+    },
+  },
+  computed: {
+    dynamicDraft() {
+      if (this.ticket) {
+        return this.ticketDraft;
+      } else {
+        return this.columnDraft;
+      }
     },
   },
 };

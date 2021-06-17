@@ -40,24 +40,40 @@ class ColumnsController < ApplicationController
 
   # PATCH/PUT /columns/1 or /columns/1.json
   def update
-    respond_to do |format|
-      if @column.update(column_params)
-        format.html { redirect_to @column, notice: 'Column was successfully updated.' }
-        format.json { render :show, status: :ok, location: @column }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @column.errors, status: :unprocessable_entity }
-      end
+    if @column.update(column_params)
+      column = JSON.parse(@column.to_json)
+      ActionCable.server.broadcast('column', { commit: 'UPDATE_COLUMN', payload: column })
+      render json: @column, status: :ok
+    else
+      render json: @column.errors, status: :unprocessable_entity
     end
+
+    # respond_to do |format|
+    #   if @column.update(column_params)
+    #     format.html { redirect_to @column, notice: 'Column was successfully updated.' }
+    #     format.json { render :show, status: :ok, location: @column }
+    #   else
+    #     format.html { render :edit, status: :unprocessable_entity }
+    #     format.json { render json: @column.errors, status: :unprocessable_entity }
+    #   end
+    # end
   end
 
   # DELETE /columns/1 or /columns/1.json
   def destroy
-    @column.destroy
-    respond_to do |format|
-      format.html { redirect_to columns_url, notice: 'Column was successfully destroyed.' }
-      format.json { head :no_content }
+    column = JSON.parse(@column.to_json)
+    if @column.destroy
+      ActionCable.server.broadcast('column', { commit: 'DELETE_COLUMN', payload: column })
+      render json: { head: :no_content }, status: :ok
+    else
+      render json: @column.errors, status: :unprocessable_entity
     end
+
+    # @column.destroy
+    # respond_to do |format|
+    #   format.html { redirect_to columns_url, notice: 'Column was successfully destroyed.' }
+    #   format.json { head :no_content }
+    # end
   end
 
   private

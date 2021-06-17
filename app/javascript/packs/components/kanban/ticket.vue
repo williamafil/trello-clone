@@ -1,12 +1,14 @@
 <template>
-  <span class="ticket">
+  <span
+    class="ticket cursor-pointer w-full flex-shrink-0 font-bold justify-between"
+  >
     <div>{{ ticket.name }}</div>
     <edit-menu @click="toggleIsEdit" :ticket="ticket" :kanbanId="kanbanId" />
   </span>
 </template>
 
 <script>
-import EditMenu from "./TicketEditMenu";
+import EditMenu from "./EdDelMenu";
 
 export default {
   name: "Ticket",
@@ -29,7 +31,7 @@ export default {
   methods: {
     toggleIsEdit() {
       this.isEdit != this.isEdit;
-      console.log("toggle isEdit", isEdit);
+      // console.log("toggle isEdit", isEdit);
     },
   },
 };
@@ -39,7 +41,7 @@ export default {
 // .ticket {
 //   @apply bg-yellow-50 mx-2 mb-2 rounded-md px-2 py-2 font-thin text-sm shadow-sm;
 // }
-.ticket {
-  @apply cursor-pointer w-full flex-shrink-0 font-bold justify-between;
-}
+// .ticket {
+//   @apply cursor-pointer w-full flex-shrink-0 font-bold justify-between;
+// }
 </style>

@@ -15,9 +15,6 @@ require("channels");
 const images = require.context("../images", true);
 const imagePath = (name) => images(name, true);
 
-// import $ from "jquery";
-// window.$ = $;
-
 import "../stylesheets";
 
 // Vue
@@ -26,29 +23,6 @@ import Vue from "vue/dist/vue.esm";
 import store from "../store/index";
 import BoardColumn from "./components/kanban/column";
 import draggable from "vuedraggable";
-import axios from "axios-on-rails";
-import { mapState } from "vuex";
-
-// import Rails from "@rails/ujs";
-// 裡面打ajax跟資料庫取得資料。
-// 而在做這一步前，記得在開頭要引入ujs
-// import Rails from '@rails/ujs'
-// 這可以讓我們可以在不更動原有的controller的情況下，就能用Rails的慣例處理route與action。
-// beforeMount(){
-//   // 打API
-//   Rails.ajax({
-//     url: `/kanbans/${this.kanban_id}/columns.json`,
-//     type: 'GET',
-//     dataType: 'json',
-//     success: result => {
-//       // 把ajax回傳結果放進columns陣列
-//       this.columns = result;
-//     },
-//     error: error => {
-//       console.log(error);
-//     }
-//   });
-// }
 
 Vue.use(TurbolinksAdapter);
 
@@ -65,7 +39,6 @@ document.addEventListener("turbolinks:load", () => {
         return {
           kanban_id: el.dataset.kanbanid,
           newColumnName: "",
-          // columns: [],
         };
       },
       beforeMount() {
@@ -77,7 +50,7 @@ document.addEventListener("turbolinks:load", () => {
           const kanbanId = event.moved.element.kanban_id;
           const columnId = event.moved.element.id;
           const newPosition = event.moved.newIndex + 1;
-          console.log("新的 column.position: ", newPosition);
+          // console.log("新的 column.position: ", newPosition);
           this.$store.dispatch("moveColumn", {
             kanbanId,
             columnId,
@@ -85,7 +58,7 @@ document.addEventListener("turbolinks:load", () => {
           });
         },
         checkMove(event) {
-          console.log("checkMove event: ", event);
+          // console.log("checkMove event: ", event);
         },
         createColumn() {
           this.$store
@@ -94,22 +67,12 @@ document.addEventListener("turbolinks:load", () => {
               name: this.newColumnName,
             })
             .then((res) => {
-              console.log("res: ", res);
+              // console.log("res: ", res);
               this.newColumnName = "";
             });
         },
       },
       computed: {
-        // 當資料來源轉移到 vuex store 後，出現了錯誤訊息
-        // [Vue warn]: Computed property "columns" was assigned to but it has no setter.
-        // 因為在 columns/index.html.erb <draggable v-model="column.tickets"> 這個 v-model reactivity，
-        // 而 mapState 裡面只有 getter, 沒有 setter 所以無法把資料反寫回去
-        // https://stackoverflow.com/questions/46106037/vuex-computed-property-name-was-assigned-to-but-it-has-no-setter
-        // If you're going to v-model a computed property, it needs a setter.
-        // Whatever you want it to do with the updated value(probably write it to the $store,
-        // considering that's what your getter pulls it from) you do in the setter.
-
-        // ...mapState(["columns"]), // 改寫這一行
         columns: {
           get() {
             return this.$store.state.columns;

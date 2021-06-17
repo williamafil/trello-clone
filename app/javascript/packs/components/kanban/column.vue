@@ -1,8 +1,20 @@
 <template>
   <div>
-    <div class="column bg-gray-200 p-2 mr-4 text-left shadow rounded">
-      <div class="flex items-center mb-2 font-bold">
-        {{ column.name }} <span class="text-xs">(id: {{ column.id }})</span>
+    <div
+      class="column cursor-move bg-gray-200 p-2 mr-4 text-left shadow rounded"
+    >
+      <div class="flex justify-between items-center mb-2 font-bold">
+        <h2 class="ml-1">
+          {{ column.name }} <span class="text-xs">(id: {{ column.id }})</span>
+        </h2>
+        <div>
+          <edit-menu
+            @click="toggleIsEdit"
+            :column="column"
+            :kanbanId="column.kanban_id"
+            class="mr-2 cursor-pointer"
+          />
+        </div>
       </div>
       <div class="list-reset">
         <draggable
@@ -34,13 +46,14 @@
 <script>
 import ColumnTicket from "./ticket";
 import draggable from "vuedraggable";
-import axios from "axios-on-rails";
+import EditMenu from "./EdDelMenu";
 
 export default {
   name: "Column",
   components: {
     ColumnTicket,
     draggable,
+    EditMenu,
   },
   props: {
     column: {
@@ -52,11 +65,16 @@ export default {
     return {
       tickets: this.column.tickets,
       kanban_id: this.column.kanban_id,
+      isEdit: false,
     };
   },
   methods: {
+    toggleIsEdit() {
+      this.isEdit != this.isEdit;
+      // console.log("toggle isEdit", isEdit);
+    },
     dropTicket(event) {
-      console.log("dropTicket event: ", event);
+      // console.log("dropTicket event: ", event);
 
       const ticketItem = event.added || event.moved;
       if (ticketItem) {

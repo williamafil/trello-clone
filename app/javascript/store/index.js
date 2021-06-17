@@ -24,8 +24,8 @@ export default new Vuex.Store({
       state.route = route;
     },
     ADD_COLUMN(state, column) {
-      console.log("state.route: ", parseInt(state.route));
-      console.log("kanban_id: ", column.kanban_id);
+      // console.log("state.route: ", parseInt(state.route));
+      // console.log("kanban_id: ", column.kanban_id);
       if (parseInt(state.route) === column.kanban_id) {
         column.tickets = [];
         state.columns.push(column);
@@ -33,6 +33,25 @@ export default new Vuex.Store({
     },
     UPDATE_COLUMNS(state, columns) {
       state.columns = columns;
+    },
+    UPDATE_COLUMN(state, columnObj) {
+      // console.log("UPDATE_COLUMN --column obj: ", columnObj);
+      const origColumnIdx = state.columns.findIndex(
+        (column) => column.id === columnObj.id,
+      );
+
+      if (origColumnIdx !== -1) {
+        state.columns[origColumnIdx].name = columnObj.name;
+      }
+    },
+    DELETE_COLUMN(state, columnObj) {
+      // console.log("DELETE_COLUMN --column obj: ", columnObj);
+      const origColumnIdx = state.columns.findIndex(
+        (column) => column.id === columnObj.id,
+      );
+      if (origColumnIdx !== -1) {
+        state.columns.splice(origColumnIdx, 1);
+      }
     },
     REPOSITION_COLUMN(state, columns) {
       // DESC: matching state.columns position with columns payload
@@ -111,7 +130,7 @@ export default new Vuex.Store({
     },
 
     EDIT_TICKET(state, ticketObj) {
-      console.log("ticketObj: ", ticketObj);
+      // console.log("ticketObj: ", ticketObj);
       const origColumnIdx = state.columns.findIndex(
         (column) => column.id === ticketObj.column_id,
       );
@@ -149,7 +168,7 @@ export default new Vuex.Store({
         })
         .then((res) => console.log("create column res: ", res))
         .catch((error) => {
-          console.log("無法新增 column: ", error.response);
+          // console.log("無法新增 column: ", error.response);
         });
     },
     getColumns(context, kanbanid) {
@@ -159,7 +178,7 @@ export default new Vuex.Store({
           context.commit("UPDATE_COLUMNS", res.data);
         })
         .catch((error) => {
-          console.log(error.response);
+          // console.log(error.response);
         });
     },
     moveColumn(context, kanbanObj) {
@@ -171,12 +190,49 @@ export default new Vuex.Store({
           },
         )
         .then((res) => {
-          console.log("moveColumn res: ", res.data);
+          // console.log("moveColumn res: ", res.data);
           // context.commit("REPOSITION_COLUMN", res.data);
           return;
         })
         .catch((error) => {
-          console.log("無法移動 column: ", error.response);
+          // console.log("無法移動 column: ", error.response);
+        });
+    },
+    updateColumn(context, columnObj) {
+      // console.log("updateColumn columnObj: ", columnObj);
+
+      // {
+      //   "kanbanId": 4,
+      //   "id": 42,
+      //   "name": "Trello Clone哈哈",
+      //   "kanban_id": 4,
+      //   "position": 2,
+      //   "created_at": "2021-06-11T08:54:05.363Z",
+      //   "updated_at": "2021-06-13T03:14:35.882Z",
+      //     "tickets": Array[{ … }, { … }],
+      // }
+      // id: 42
+      // kanbanId: 4
+      // kanban_id: 4
+      // name: "Trello Clone哈哈"
+      // position: 2
+
+      axios
+        .put(`/kanbans/${columnObj.kanbanId}/columns/${columnObj.id}`, {
+          name: columnObj.name,
+        })
+        .then((res) => {
+          // console.log("updated column: ", res.data);
+        });
+    },
+    deleteColumn(context, columnObj) {
+      axios
+        .delete(`/kanbans/${columnObj.kanbanId}/columns/${columnObj.columnId}`)
+        .then((res) => {
+          // console.log("成功刪除 column: ", res);
+        })
+        .catch((error) => {
+          // console.log("刪除 column 失敗: ", error.response);
         });
     },
     addTicket(context, ticketObj) {
@@ -191,7 +247,7 @@ export default new Vuex.Store({
           // context.commit("ADD_TICKET", { tickets, newTicket: res.data });
         })
         .catch((error) => {
-          console.log("新增 ticket 失敗: ", error.response);
+          // console.log("新增 ticket 失敗: ", error.response);
         });
     },
     editTicket(context, ticketObj) {
@@ -203,11 +259,11 @@ export default new Vuex.Store({
           name: ticketObj.name,
         })
         .then((res) => {
-          console.log("updated ticket: ", res.data);
+          // console.log("updated ticket: ", res.data);
           // context.commit("EDIT_TICKET", { tickets, updatedTicket: res.data });
         })
         .catch((error) => {
-          console.log("更新 ticket 失敗: ", error.response);
+          // console.log("更新 ticket 失敗: ", error.response);
         });
     },
     moveTicket(context, ticketObj) {
@@ -221,10 +277,10 @@ export default new Vuex.Store({
           },
         )
         .then((res) => {
-          console.log("new ticket position: ", res.data);
+          // console.log("new ticket position: ", res.data);
         })
         .catch((error) => {
-          console.log("移動 ticket 失敗: ", error.response);
+          // console.log("移動 ticket 失敗: ", error.response);
         });
     },
     deleteTicket(context, ticketObj) {
@@ -242,7 +298,7 @@ export default new Vuex.Store({
           // });
         })
         .catch((error) => {
-          console.log("刪除 ticket 失敗: ", error.response);
+          // console.log("刪除 ticket 失敗: ", error.response);
         });
     },
   },

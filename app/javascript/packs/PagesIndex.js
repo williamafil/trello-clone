@@ -20,7 +20,7 @@ document.addEventListener("turbolinks:load", () => {
       },
       mounted() {
         axios.get("https://randomuser.me/api/?results=10").then((res) => {
-          console.log("res: ", res);
+          // console.log("res: ", res);
           this.users = res.data.results;
         });
       },

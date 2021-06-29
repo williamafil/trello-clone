@@ -38,6 +38,12 @@ group :development, :test do
   gem 'pry', '~> 0.12.2'
   gem 'pry-byebug', '~> 3.7'
 
+  gem "capistrano", '~> 3.14.1', require: false
+	gem 'capistrano-rvm', '~> 0.1.2', require: false
+	gem 'capistrano-rails', '~> 1.6.1', require: false
+	gem 'capistrano-bundler', require: false
+	gem 'capistrano3-puma', '~> 4.0.0', require: false
+	gem 'capistrano-rails-console', '~> 2.3.0', require: false
 end
 
 group :development do

@@ -66,7 +66,7 @@ namespace :deploy do
     end
   end
 
-  覆蓋原本的 puma 指令
+  # 覆蓋原本的 puma 指令
   desc 'Restart application'
   task :restart do
     on roles(:app), in: :sequence, wait: 5 do

@@ -21,9 +21,9 @@
 # role :web, %w{user1@primary.com user2@additional.com}, other_property: :other_value
 # role :db,  %w{deploy@example.com}
 
-role :app, %w(deploy@111.111.111.111)
-role :web, %w(deploy@111.111.111.111)
-role :db, %w(deploy@111.111.111.111)
+role :app, %w(deploy@172.104.63.180)
+role :web, %w(deploy@172.104.63.180)
+role :db, %w(deploy@172.104.63.180)
 
 # Configuration
 # =============

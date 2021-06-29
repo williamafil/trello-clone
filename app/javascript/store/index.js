@@ -14,12 +14,25 @@ function compare(a, b) {
   return 0;
 }
 
+let nextId = 0;
+
 export default new Vuex.Store({
   state: {
+    notifications: [],
     columns: [],
     route: null,
   },
   mutations: {
+    PUSH_NOTICE(state, notification) {
+      state.notifications.push({
+        ...notification,
+        id: Date.now(),
+        // id: (nextId += 1),
+      });
+    },
+    DELETE_NOTICE(state, notificationToRemove) {
+      state.notifications = state.notifications.filter((notification) => notification.id !== notificationToRemove.id);
+    },
     SET_ROUTE(state, route) {
       state.route = route;
     },
@@ -55,13 +68,15 @@ export default new Vuex.Store({
     },
     REPOSITION_COLUMN(state, columns) {
       // DESC: matching state.columns position with columns payload
-      columns.forEach((col) => {
-        const [stateColumn] = state.columns.filter(
-          (item) => item.id === col.id,
-        );
-        stateColumn.position = col.position;
-      });
-      state.columns.sort(compare);
+      if (parseInt(state.route) === columns[0].kanban_id) {
+        columns.forEach((col) => {
+          const [stateColumn] = state.columns.filter(
+            (item) => item.id === col.id,
+          );
+          stateColumn.position = col.position;
+        });
+        state.columns.sort(compare);
+      }
     },
     ADD_TICKET(state, newTicket) {
       const origColumnIdx = state.columns.findIndex(
@@ -79,54 +94,58 @@ export default new Vuex.Store({
       }
     },
     REORDER_TICKET(state, ticketObj) {
-      const origColumnIdx = state.columns.findIndex(
-        (column) => column.id === ticketObj.ticket.column_id,
-      );
-      state.columns[origColumnIdx].tickets.forEach((ticket) => {
-        const [newObj] = ticketObj.newTickets.filter(
-          (newTicket) => newTicket.id === ticket.id,
+      if (parseInt(state.route) === ticketObj.kanbanId) {
+        const origColumnIdx = state.columns.findIndex(
+          (column) => column.id === ticketObj.ticket.column_id,
         );
-        ticket.position = newObj.position;
-      });
+        state.columns[origColumnIdx].tickets.forEach((ticket) => {
+          const [newObj] = ticketObj.newTickets.filter(
+            (newTicket) => newTicket.id === ticket.id,
+          );
+          ticket.position = newObj.position;
+        });
 
-      state.columns[origColumnIdx].tickets.sort(compare);
+        state.columns[origColumnIdx].tickets.sort(compare);
+      }
     },
     TRANSFER_TICKET(state, ticketObj) {
       // DESC: LOOKUP OLD TICKET ID FROM OLD COLUMN, REMOVE IT IF EXIST
-      const origColumnIdx = state.columns.findIndex(
-        (column) => column.id === ticketObj.old_column_id,
-      );
-      const origTicketIdx = state.columns[origColumnIdx].tickets.findIndex(
-        (ticket) => ticket.id === ticketObj.ticket.id,
-      );
-      if (origTicketIdx === -1) {
-        return;
-      } else {
-        state.columns[origColumnIdx].tickets.splice(origTicketIdx, 1);
+      if (parseInt(state.route) === ticketObj.kanbanId) {
+        const origColumnIdx = state.columns.findIndex(
+          (column) => column.id === ticketObj.old_column_id,
+        );
+        const origTicketIdx = state.columns[origColumnIdx].tickets.findIndex(
+          (ticket) => ticket.id === ticketObj.ticket.id,
+        );
+        if (origTicketIdx === -1) {
+          return;
+        } else {
+          state.columns[origColumnIdx].tickets.splice(origTicketIdx, 1);
+        }
+        // DESC: RE-ASSIGN POSITION TO TICKETS IN OLD COLUMN AND RE-ORDER THEM ASC BY POSITION
+        state.columns[origColumnIdx].tickets.forEach((ticket) => {
+          const [oldObj] = ticketObj.oldTickets.filter(
+            (oldTicket) => oldTicket.id === ticket.id,
+          );
+          ticket.position = oldObj.position;
+        });
+        state.columns[origColumnIdx].tickets.sort(compare);
+
+        // DESC: INSERT NEW TICKET OBJ TO NEW COLUMN TICKETS ARRAY
+        const newColumnIdx = state.columns.findIndex(
+          (column) => column.id === ticketObj.ticket.column_id,
+        );
+        state.columns[newColumnIdx].tickets.push(ticketObj.ticket);
+
+        // DESC: RE-ASSIGN POSITION TO TICKETS IN NEW COLUMN AND RE-ORDER THEM ASC BY POSITION
+        state.columns[newColumnIdx].tickets.forEach((ticket) => {
+          const [newObj] = ticketObj.newTickets.filter(
+            (newTicket) => newTicket.id === ticket.id,
+          );
+          ticket.position = newObj.position;
+        });
+        state.columns[newColumnIdx].tickets.sort(compare);
       }
-      // DESC: RE-ASSIGN POSITION TO TICKETS IN OLD COLUMN AND RE-ORDER THEM ASC BY POSITION
-      state.columns[origColumnIdx].tickets.forEach((ticket) => {
-        const [oldObj] = ticketObj.oldTickets.filter(
-          (oldTicket) => oldTicket.id === ticket.id,
-        );
-        ticket.position = oldObj.position;
-      });
-      state.columns[origColumnIdx].tickets.sort(compare);
-
-      // DESC: INSERT NEW TICKET OBJ TO NEW COLUMN TICKETS ARRAY
-      const newColumnIdx = state.columns.findIndex(
-        (column) => column.id === ticketObj.ticket.column_id,
-      );
-      state.columns[newColumnIdx].tickets.push(ticketObj.ticket);
-
-      // DESC: RE-ASSIGN POSITION TO TICKETS IN NEW COLUMN AND RE-ORDER THEM ASC BY POSITION
-      state.columns[newColumnIdx].tickets.forEach((ticket) => {
-        const [newObj] = ticketObj.newTickets.filter(
-          (newTicket) => newTicket.id === ticket.id,
-        );
-        ticket.position = newObj.position;
-      });
-      state.columns[newColumnIdx].tickets.sort(compare);
     },
 
     EDIT_TICKET(state, ticketObj) {
@@ -157,6 +176,12 @@ export default new Vuex.Store({
     },
   },
   actions: {
+    add_notification(context, notification) {
+      context.commit('PUSH_NOTICE', notification);
+    },
+    remove_notification(context, notificationToRemove) {
+      context.commit('DELETE_NOTICE', notificationToRemove);
+    },
     setRoute(context, route) {
       context.commit("SET_ROUTE", route);
     },

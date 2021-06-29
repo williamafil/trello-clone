@@ -4,12 +4,14 @@ class ColumnsController < ApplicationController
   def drag
     @column.insert_at(params[:position].to_i)
     params = JSON.parse(@column.kanban.columns.to_json)
+    ActionCable.server.broadcast('flash', { commit: 'PUSH_NOTICE', payload: { type: 'success', message: '移動了一個看板' } })
     ActionCable.server.broadcast('column', { commit: 'REPOSITION_COLUMN', payload: params })
     render 'show.json'
   end
 
   # GET /columns or /columns.json
   def index
+    flash.now[:notice] = "歡迎光臨"
     @kanban = Kanban.find(params[:kanban_id])
     @columns = @kanban.columns
   end
@@ -30,8 +32,8 @@ class ColumnsController < ApplicationController
     @column = Column.new(column_params)
     if @column.save
       column = JSON.parse(@column.to_json)
-        ActionCable.server.broadcast('column',
-                                    { commit: 'ADD_COLUMN', payload: column })
+      ActionCable.server.broadcast('flash', { commit: 'PUSH_NOTICE', payload: { type: 'success', message: '新增一個看板' } })
+      ActionCable.server.broadcast('column', { commit: 'ADD_COLUMN', payload: column })
       render json: @column, status: :ok
     else
       render json: @column.errors, status: :unprocessable_entity
@@ -42,38 +44,24 @@ class ColumnsController < ApplicationController
   def update
     if @column.update(column_params)
       column = JSON.parse(@column.to_json)
+      ActionCable.server.broadcast('flash', { commit: 'PUSH_NOTICE', payload: { type: 'success', message: '更新一個看板' } })
       ActionCable.server.broadcast('column', { commit: 'UPDATE_COLUMN', payload: column })
       render json: @column, status: :ok
     else
       render json: @column.errors, status: :unprocessable_entity
     end
-
-    # respond_to do |format|
-    #   if @column.update(column_params)
-    #     format.html { redirect_to @column, notice: 'Column was successfully updated.' }
-    #     format.json { render :show, status: :ok, location: @column }
-    #   else
-    #     format.html { render :edit, status: :unprocessable_entity }
-    #     format.json { render json: @column.errors, status: :unprocessable_entity }
-    #   end
-    # end
   end
 
   # DELETE /columns/1 or /columns/1.json
   def destroy
     column = JSON.parse(@column.to_json)
     if @column.destroy
+      ActionCable.server.broadcast('flash', { commit: 'PUSH_NOTICE', payload: { type: 'error', message: '移除一個看板' } })
       ActionCable.server.broadcast('column', { commit: 'DELETE_COLUMN', payload: column })
       render json: { head: :no_content }, status: :ok
     else
       render json: @column.errors, status: :unprocessable_entity
     end
-
-    # @column.destroy
-    # respond_to do |format|
-    #   format.html { redirect_to columns_url, notice: 'Column was successfully destroyed.' }
-    #   format.json { head :no_content }
-    # end
   end
 
   private

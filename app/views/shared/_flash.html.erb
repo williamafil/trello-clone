@@ -1,6 +1,15 @@
-<div class="bg-green-200 px-3 py-2">
+<div class="bg-orange-200 px-3 py-2 w-full">
   <i class="fas fa-exclamation-circle text-teal-600 mr-1"></i>
   <span class="text-teal-600">
+    <% puts "================================" %>
+    <%# puts flash %>
+      <% flash.each do |type, msg| %>
+      <div>
+        <% puts type %>
+        <% puts msg %>
+
+      </div>
+    <% end %>
     <%= notice %>
   </span>
 </div>

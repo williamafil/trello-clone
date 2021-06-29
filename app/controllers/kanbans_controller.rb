@@ -28,6 +28,7 @@ class KanbansController < ApplicationController
 
     respond_to do |format|
       if @kanban.save
+        ActionCable.server.broadcast('flash', { commit: 'PUSH_NOTICE', payload: { type: 'success', message: '新增看板' } })
         format.html { redirect_to @kanban, notice: "Kanban was successfully created." }
         format.json { render :show, status: :created, location: @kanban }
       else
@@ -41,6 +42,7 @@ class KanbansController < ApplicationController
   def update
     respond_to do |format|
       if @kanban.update(kanban_params)
+        ActionCable.server.broadcast('flash', { commit: 'PUSH_NOTICE', payload: { type: 'success', message: '更新看板' } })
         format.html { redirect_to @kanban, notice: "Kanban was successfully updated." }
         format.json { render :show, status: :ok, location: @kanban }
       else

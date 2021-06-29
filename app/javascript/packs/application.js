@@ -22,16 +22,32 @@ import TurbolinksAdapter from "vue-turbolinks";
 import Vue from "vue/dist/vue.esm";
 import store from "../store/index";
 import BoardColumn from "./components/kanban/column";
+import FlashMessage from "./components/flash/flashMessage"
 import draggable from "vuedraggable";
 
 Vue.use(TurbolinksAdapter);
 
 document.addEventListener("turbolinks:load", () => {
   let el = document.querySelector("#column");
+  let flashEl = document.querySelector('#flash')
 
+  // ＦＬＡＳＨ  ＭＥＳＳＡＧＥ
+  if (flashEl) {
+    window.$store = store;
+    const flashApp = new Vue({
+      el: flashEl,
+      store,
+      components: {FlashMessage},
+      created() {
+        console.log('flash message')
+      }
+    })
+  }
+
+  // ＫＡＮＢＡＮ ＆ ＴＩＣＫＥＴ
   if (el) {
     window.$store = store;
-    new Vue({
+    const column = new Vue({
       el,
       store,
       components: { BoardColumn, draggable },

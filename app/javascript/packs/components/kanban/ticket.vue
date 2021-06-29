@@ -1,8 +1,8 @@
 <template>
   <span
-    class="ticket cursor-move w-full flex-shrink-0 font-bold justify-between"
+    class="ticket cursor-move w-full flex-shrink-0 justify-between hover:bg-orange-50"
   >
-    <div>{{ ticket.name }}</div>
+    <h3 class=" font-medium text-sm tracking-wide">{{ ticket.name }}</h3>
     <edit-menu
       @click="toggleIsEdit"
       :ticket="ticket"

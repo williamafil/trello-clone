@@ -28,8 +28,7 @@ class KanbansController < ApplicationController
 
     respond_to do |format|
       if @kanban.save
-        ActionCable.server.broadcast('flash', { commit: 'PUSH_NOTICE', payload: { type: 'success', message: '新增看板' } })
-        format.html { redirect_to @kanban, notice: "Kanban was successfully created." }
+        format.html { redirect_to root_path, success: "看板新增成功！" }
         format.json { render :show, status: :created, location: @kanban }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -42,8 +41,7 @@ class KanbansController < ApplicationController
   def update
     respond_to do |format|
       if @kanban.update(kanban_params)
-        ActionCable.server.broadcast('flash', { commit: 'PUSH_NOTICE', payload: { type: 'success', message: '更新看板' } })
-        format.html { redirect_to @kanban, notice: "Kanban was successfully updated." }
+        format.html { redirect_to root_path, success: "看板編輯成功！" }
         format.json { render :show, status: :ok, location: @kanban }
       else
         format.html { render :edit, status: :unprocessable_entity }

@@ -1,26 +1,21 @@
-<section class="section hero text-center">
-  <h1 class="title text-xl mt-5">歡迎登入 <%= current_user.display_name%>的 Task Manager！</h1>
-  <br>
-  <div class="text-md flex">
-    <div class="flex">
-      <% @kanbans.each do |kanban| %>
-      <div class="w-64 rounded overflow-hidden bg-gray-50 shadow m-4">
-        <div class="px-6 py-4">
-
-          <div class="font-bold text-xl mb-2 flex justify-center">
-            <img class="w-8 h-8" src="https://api.iconify.design/ph:user-circle-plus-duotone.svg" alt="user plus icon" />
-          </div>
-          <div class="font-bold text-xl mb-2"><%= link_to kanban.name, kanban_columns_path(kanban), class: "hover:bg-transparent hover:text-yellow-400" %></div>
-          <p class="text-gray-700 text-sm">
-            <%= kanban.description %>
-          </p>
-        </div>
-        <!-- 略 -->
+<div class="container px-4 sm:px-8 lg:px-8 xl:px-16 mx-auto">
+  <section class="section hero text-center">
+    <h1 class="title text-xl mt-5">歡迎登入 <%= current_user.display_name%>的 Task Manager！</h1>
+    <br>
+    <%= link_to '新增Kanban', new_kanban_path, class: "font-light button border-2 border-gray-100 bg-gray-100 hover:bg-coolGray-50 hover:border-transparent shadow py-2 px-3 rounded" %>
+    <div class="text-md flex p-4 mt-4">
+      <div class="flex flex-wrap justify-center">
+        <% @kanbans.each do |kanban| %>
+          <article class=" h-44 w-64 m-2 border-2 border-warmGray-100 p-4 rounded bg-coolGray-50 shadow-sm hover:shadow">
+            <div class="font-bold text-xl mb-2">
+              <%= link_to kanban.name, kanban_columns_path(kanban), class: "hover:bg-transparent hover:text-orange-500" %>
+            </div>
+            <p class=" h-28 text-gray-700 text-sm overflow-scroll overflow-y-auto">
+              <%= kanban.description %>
+            </p>
+          </article>
+        <% end %>
       </div>
-    </div>
-    <% end %>
-
-    <div class="font-light mt-5 center"><%= link_to '新增Kanban', new_kanban_path, class: "font-light button border bg-gray-100 hover:bg-gray-400 hover:border-transparent shadow py-2 px-3 rounded" %></div>
     </div> 
-  </div>
-</section>
+  </section>
+</div>

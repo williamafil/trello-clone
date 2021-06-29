@@ -23,3 +23,7 @@
 .spacer {
   min-width: 50px;
 }
+
+.ghost-card {
+  @apply rounded border-2 border-orange-300 shadow-md h-full opacity-60 bg-blueGray-300;
+}

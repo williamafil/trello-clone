@@ -10,7 +10,7 @@
   </head>
 
 
-  <body class="antialiased h-full relative">
+  <body class="antialiased h-full">
     <div class="flex flex-col h-screen">
     <!-- header -->
     <header class="header bg-coolGray-50 w-full z-50 shadow flex flex-initial">
@@ -19,8 +19,8 @@
     <!-- end header -->
 
     <!-- notice -->
-    <div id="flash" class="absolute top-20 mx-auto z-1000">
-      <flash-message></flash-message>
+    <div id="flash" class="fixed top-20 mx-auto z-1000">
+      <flash-message :message="<%= flash.to_json %>"></flash-message>
     </div>
     <section class="flex flex-none">
       <%#= render "shared/flash" if notice %>  

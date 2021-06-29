@@ -1,10 +1,10 @@
 <template>
   <div>
     <div
-      class="column cursor-move bg-gray-200 p-2 mr-4 text-left shadow rounded"
+      class="column cursor-move bg-gray-200 p-2 text-left shadow rounded hover:bg-trueGray-300 hover:shadow-lg"
     >
-      <div class="flex justify-between items-center mb-2 font-bold">
-        <h2 class="ml-1">{{ column.name }} <span class="text-xs"></span></h2>
+      <div class="flex justify-between items-center mb-2">
+        <h2 class="ml-1 font-semibold tracking-wider">{{ column.name }} <span class="text-xs"></span></h2>
         <div>
           <edit-menu
             @click="toggleIsEdit"
@@ -17,6 +17,7 @@
       <div class="list-reset">
         <draggable
           class="ticket-list"
+          ghost-class="ghost-class"
           v-model="column.tickets"
           group="column"
           @change="dropTicket"
@@ -33,7 +34,7 @@
         <input
           type="text"
           class="block w-full rounded p-2 bg-gray-100"
-          placeholder="add new task"
+          placeholder="Enter 新增事項"
           @keyup.enter="createTicket"
         />
       </div>
@@ -108,6 +109,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.ghost-class {
+  @apply bg-orange-100 border-2 border-orange-200 shadow;
+}
 // .column {
 //   @apply bg-gray-100 mx-2 w-64 rounded mr-4;
 

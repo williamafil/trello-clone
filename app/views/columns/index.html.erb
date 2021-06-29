@@ -1,18 +1,18 @@
 <div id="column" class="h-full bg-trueGray-100 w-full overflow-auto" data-kanbanid="<%= @kanban.id %>">
   <div class="board p-4 bg-gray-100 h-full w-full">
     <div class="flex flex-row items-start">
-      <draggable v-model="columns" @change="dropColumn" :move="checkMove" class="">
+      <draggable v-model="columns" @change="dropColumn" ghost-class="ghost-card" :move="checkMove" class="">
         <transition-group  class="flex">
-          <board-column v-for="column in columns" :column="column" :key="column.id" />
+          <board-column v-for="column in columns" :column="column" :key="column.id" class="mr-4" />
         </transition-group>
       </draggable>  
       <div class="column bg-gray-200 p-2 text-left shadow rounded border-2 border-coolGray-300">
-        <h4 class="mb-2 font-bold">New Column</h4>
+        <h4 class="mb-2 font-bold">New Cards</h4>
         <input
           type="text"
           class="p-2 mr-2 flex-grow w-full block rounded bg-gray-100"
           v-model="newColumnName"
-          placeholder="Enter new column name..."
+          placeholder="Enter 新增卡片"
           @keyup.enter="createColumn"
         />
       </div>

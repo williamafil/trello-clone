@@ -11,11 +11,11 @@ import { mapState } from 'vuex';
 import flashElement from './flashElement.vue'
 export default {
   name: "flash-message",
-  // props: {
-  //   message: {
-  //     type: [Object, Array]
-  //   }
-  // },
+  props: {
+    message: {
+      type: [Array]
+    }
+  },
   components: {
     flashElement
   },
@@ -25,12 +25,23 @@ export default {
       // messages: [this.message]
     };
   },
-      computed: {
-        ...mapState(['notifications'])
-        // messages() {
-        //     return this.$store.state.notifications;
-        // },
-      },
+  created() {
+    console.log(this.message)
+    this.message.forEach((msg)=>{
+      this.$store.dispatch('add_notification',{
+        type: msg[0],
+        message: msg[1]
+      })
+
+
+    })
+  },
+  computed: {
+    ...mapState(['notifications'])
+    // messages() {
+    //     return this.$store.state.notifications;
+    // },
+  },
 };
 </script>
 

@@ -11,7 +11,6 @@ class ColumnsController < ApplicationController
 
   # GET /columns or /columns.json
   def index
-    flash.now[:notice] = "歡迎光臨"
     @kanban = Kanban.find(params[:kanban_id])
     @columns = @kanban.columns
   end

@@ -69,6 +69,7 @@ GEM
       pry-rails
       railties
     bcrypt (3.1.16)
+    bcrypt_pbkdf (1.1.0)
     bindex (0.8.1)
     bootsnap (1.7.5)
       msgpack (~> 1.0)
@@ -112,6 +113,7 @@ GEM
       railties (>= 4.1.0)
       responders
       warden (~> 1.2.3)
+    ed25519 (1.2.4)
     erubi (1.10.0)
     ffi (1.15.0)
     globalid (0.4.2)
@@ -285,6 +287,7 @@ DEPENDENCIES
   acts_as_list (~> 1.0, >= 1.0.4)
   awesome_print
   awesome_rails_console (~> 0.4.4)
+  bcrypt_pbkdf (>= 1.0, < 2.0)
   bootsnap (>= 1.4.2)
   byebug
   capistrano (~> 3.14.1)
@@ -295,6 +298,7 @@ DEPENDENCIES
   capistrano3-puma (~> 4.0.0)
   capybara (>= 2.15)
   devise (~> 4.8)
+  ed25519 (>= 1.2, < 2.0)
   jbuilder (~> 2.7)
   listen (~> 3.2)
   meta_request

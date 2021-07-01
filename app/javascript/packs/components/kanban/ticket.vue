@@ -1,13 +1,13 @@
 <template>
   <span
-    class="ticket cursor-move w-full flex-shrink-0 justify-between hover:bg-orange-50"
+    class="relative ticket cursor-move w-full flex-shrink-0 justify-between hover:bg-orange-50"
   >
-    <h3 class=" font-medium text-sm tracking-wide">{{ ticket.name }}</h3>
+    <h3 class=" font-medium text-sm tracking-wide w-11/12 overflow-hidden">{{ ticket.name }}</h3>
     <edit-menu
       @click="toggleIsEdit"
       :ticket="ticket"
       :kanbanId="kanbanId"
-      class="cursor-pointer"
+      class="absolute top-3 right-2 cursor-pointer"
     />
   </span>
 </template>

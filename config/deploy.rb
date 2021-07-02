@@ -24,7 +24,7 @@ append :linked_files, "config/master.key"
 
 # Default value for linked_dirs is []
 # append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "public/system"
-append :linked_dirs, "log", "storage", "tmp/pids", "tmp/cache", "tmp/sockets", "public/system"
+append :linked_dirs, "log", "storage", "tmp/pids", "tmp/cache", "tmp/sockets", "public/system", "public/packs", ".bundle", "node_modules"
 
 # Default value for :format is :airbrussh.
 # set :format, :airbrussh
@@ -45,8 +45,18 @@ append :linked_dirs, "log", "storage", "tmp/pids", "tmp/cache", "tmp/sockets", "
 # Uncomment the following to require manually verifying the host key before first deploy.
 # set :ssh_options, verify_host_key: :secure
 
+before "deploy:assets:precompile", "deploy:yarn_install"
+
 namespace :deploy do
-  # rails db:seed
+  desc "Run rake yarn install"
+  task :yarn_install do
+    on roles(:web) do
+      within release_path do
+        execute("cd #{release_path} && yarn install --silent --no-progress --no-audit --no-optional")
+      end
+    end
+  end
+
   desc "reload the database with seed data"
   task :seed do
     on roles(:app) do
@@ -56,7 +66,6 @@ namespace :deploy do
     end
   end
 
-  # migrate DB
   desc 'Migrate database'
   task :migrate_db do
     on roles(:app) do
@@ -66,7 +75,6 @@ namespace :deploy do
     end
   end
 
-  # 覆蓋原本的 puma 指令
   desc 'Restart application'
   task :restart do
     on roles(:app), in: :sequence, wait: 5 do
@@ -76,7 +84,6 @@ namespace :deploy do
     end
   end
 
-  # 上傳 public底下的東西
   desc 'Upload public folder'
   task :upload_public do
     on roles(:app) do
@@ -84,7 +91,7 @@ namespace :deploy do
       
     end
   end
-  # 上傳 master.key 
+
   namespace :check do
     before :linked_files, :set_master_key do
       on roles(:app), in: :sequence, wait: 10 do
@@ -99,7 +106,6 @@ end
 after :deploy, "puma:start"
 
 namespace :nginx do
-  # 建立軟連結 (僅首次需使用)
   desc 'Setup symlink to nginx'
   task :config do
     on roles(:app), in: :sequence, wait: 10 do
@@ -110,7 +116,7 @@ namespace :nginx do
       end
     end
   end
-  # Nginx 相關指令
+
   [:start, :stop, :restart, :reload, :status].each do |nginx_action|
     desc "Nginx #{nginx_action}"
     task nginx_action do

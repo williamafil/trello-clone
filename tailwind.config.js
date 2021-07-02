@@ -1,6 +1,4 @@
-console.log("tailwind.config.js loaded");
-
-const colors = require("tailwindcss/colors");
+// const colors = require("tailwindcss/colors");
 
 module.exports = {
   future: {},

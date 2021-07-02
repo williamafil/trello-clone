@@ -1,2 +1,2 @@
-import "./tailwindcss.scss";
+// import "./tailwindcss.scss";
 import "./application.scss";

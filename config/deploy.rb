@@ -45,17 +45,17 @@ append :linked_dirs, "log", "storage", "tmp/pids", "tmp/cache", "tmp/sockets", "
 # Uncomment the following to require manually verifying the host key before first deploy.
 # set :ssh_options, verify_host_key: :secure
 
-# before "deploy:assets:precompile", "deploy:yarn_install"
+before "deploy:assets:precompile", "deploy:yarn_install"
 
 namespace :deploy do
-  # desc "Run rake yarn install"
-  # task :yarn_install do
-  #   on roles(:web) do
-  #     within release_path do
-  #       execute("cd #{release_path} && yarn install --silent --no-progress --no-audit --no-optional")
-  #     end
-  #   end
-  # end
+  desc "Run rake yarn install"
+  task :yarn_install do
+    on roles(:app) do
+      within release_path do
+        execute("cd #{release_path} && yarn install --ignore-engines")
+      end
+    end
+  end
 
   desc "reload the database with seed data"
   task :seed do

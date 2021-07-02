@@ -19,6 +19,10 @@
   },
   "version": "0.1.0",
   "devDependencies": {
+    "@tailwindcss/postcss7-compat": "^2.2.4",
+    "autoprefixer": "^9",
+    "postcss": "^7",
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat",
     "webpack-dev-server": "^3.11.2"
   }
 }

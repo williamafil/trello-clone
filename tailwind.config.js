@@ -2,7 +2,14 @@ const colors = require("tailwindcss/colors");
 
 module.exports = {
   future: {},
-  purge: [],
+  purge: [
+    "./app/**/*.html.erb",
+    "./app/**/*.html.haml",
+    "./app/helpers/**/*.rb",
+    "./app/javascript/**/*.js",
+    "./app/javascript/**/*.vue",
+    "./app/javascript/**/*.jsx"
+  ],
   theme: {
     colors: {
       transparent: "transparent",

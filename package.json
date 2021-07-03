@@ -1,5 +1,5 @@
 {
-  "name": "Rails_Vue_Kanban",ㄇㄣ
+  "name": "Rails_Vue_Kanban",
   "private": true,
   "dependencies": {
     "@babel/plugin-proposal-private-methods": "^7.14.5",

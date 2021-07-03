@@ -15,7 +15,7 @@ require("channels");
 // const images = require.context("../images", true);
 // const imagePath = (name) => images(name, true);
 
-import "../stylesheets";
+import "../stylesheets/index.js";
 
 // Vue
 import TurbolinksAdapter from "vue-turbolinks";

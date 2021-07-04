@@ -1,7 +1,9 @@
 import consumer from "./consumer";
 console.log("flash channel 連線中...");
 
-consumer.subscriptions.create("FlashChannel", {
+consumer.subscriptions.create({
+  channel: "FlashChannel",
+}, {
   connected() {
     // Called when the subscription is ready for use on the server
     console.log("flash channel 連線成功!");

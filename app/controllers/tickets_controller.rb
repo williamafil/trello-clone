@@ -12,12 +12,12 @@ class TicketsController < ApplicationController
       when 'moved'
         # ticket 在原有 column 移動位置
         ActionCable.server.broadcast("flash:#{current_user.id}", { commit: 'PUSH_NOTICE', payload: { type: 'success', message: '移動了一個 ticket' } })
-        ActionCable.server.broadcast("kanban:#{kanban_id}", { commit: 'REORDER_TICKET', payload: { kanbanId: kanban_id, ticket: new_ticket, newTickets: new_col_tickets } })
+        ActionCable.server.broadcast("column", { commit: 'REORDER_TICKET', payload: { kanbanId: kanban_id, ticket: new_ticket, newTickets: new_col_tickets } })
         # ActionCable.server.broadcast('column', { commit: 'REORDER_TICKET', payload: { kanbanId: kanban_id, ticket: new_ticket, newTickets: new_col_tickets } })
       when 'added'
         # 轉移 ticket 至其他 column
         ActionCable.server.broadcast("flash:#{current_user.id}", { commit: 'PUSH_NOTICE', payload: { type: 'success', message: '轉移了一個 ticket' } })
-        ActionCable.server.broadcast("kanban:#{kanban_id}",
+        ActionCable.server.broadcast("column",
                                      { commit: 'TRANSFER_TICKET',
                                        payload: {
                                         kanbanId: kanban_id,
@@ -57,7 +57,7 @@ class TicketsController < ApplicationController
     if @ticket.save
       ticket = JSON.parse(@ticket.to_json)
       ActionCable.server.broadcast("flash:#{current_user.id}", { commit: 'PUSH_NOTICE', payload: { type: 'success', message: '新增了一個 ticket' } })
-      ActionCable.server.broadcast("kanban:#{kanban_id}",
+      ActionCable.server.broadcast("column",
                                    { commit: 'ADD_TICKET', payload: ticket })
       render json: @ticket, status: :ok
     else
@@ -71,7 +71,7 @@ class TicketsController < ApplicationController
       kanban_id = @ticket.column.kanban_id
       ticket = JSON.parse(@ticket.to_json)
       ActionCable.server.broadcast("flash:#{current_user.id}", { commit: 'PUSH_NOTICE', payload: { type: 'warning', message: '更新了一個看板 ticket' } })
-      ActionCable.server.broadcast("kanban:#{kanban_id}",
+      ActionCable.server.broadcast("column",
                                    { commit: 'EDIT_TICKET', payload: ticket })
       render json: @ticket, status: :ok
     else
@@ -85,7 +85,7 @@ class TicketsController < ApplicationController
     if @ticket.destroy
       kanban_id = @ticket.column.kanban_id
       ActionCable.server.broadcast("flash:#{current_user.id}", { commit: 'PUSH_NOTICE', payload: { type: 'error', message: '移除了一個看板 ticket' } })
-      ActionCable.server.broadcast("kanban:#{kanban_id}",
+      ActionCable.server.broadcast("column",
                                    { commit: 'DELETE_TICKET', payload: ticket })
       render json: { head: :no_content }, status: :ok
     else

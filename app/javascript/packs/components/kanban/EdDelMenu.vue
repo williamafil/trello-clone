@@ -203,7 +203,7 @@ export default {
             this.isDeleteElement = false;
           });
       }
-      // console.log("this.column: ", this.column);
+
       return this.$store
         .dispatch("deleteColumn", {
           kanbanId: this.kanbanId,

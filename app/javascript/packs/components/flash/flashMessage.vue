@@ -26,7 +26,6 @@ export default {
     };
   },
   created() {
-    console.log(this.message)
     this.message.forEach((msg)=>{
       this.$store.dispatch('add_notification',{
         type: msg[0],

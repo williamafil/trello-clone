@@ -70,15 +70,12 @@ export default {
   methods: {
     toggleIsEdit() {
       this.isEdit != this.isEdit;
-      // console.log("toggle isEdit", isEdit);
     },
     dropTicket(event) {
-      // console.log("dropTicket event: ", event);
 
       const ticketItem = event.added || event.moved;
       if (ticketItem) {
         const [behavior] = Object.keys(event);
-        // console.log("behavior：", behavior);
         const kanbanId = this.column.kanban_id;
         const columnId = this.column.id;
         const ticketId = ticketItem.element.id;
@@ -112,11 +109,4 @@ export default {
 .ghost-class {
   @apply bg-orange-100 border-2 border-orange-200 shadow;
 }
-// .column {
-//   @apply bg-gray-100 mx-2 w-64 rounded mr-4;
-
-//   .column-name {
-//     @apply font-thin px-3 py-2;
-//   }
-// }
 </style>

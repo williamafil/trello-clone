@@ -22,14 +22,14 @@ import TurbolinksAdapter from "vue-turbolinks";
 import Vue from "vue/dist/vue.esm";
 import store from "../store/index";
 import BoardColumn from "./components/kanban/column";
-import FlashMessage from "./components/flash/flashMessage"
+import FlashMessage from "./components/flash/flashMessage";
 import draggable from "vuedraggable";
 
 Vue.use(TurbolinksAdapter);
 
 document.addEventListener("turbolinks:load", () => {
   let el = document.querySelector("#column");
-  let flashEl = document.querySelector('#flash')
+  let flashEl = document.querySelector("#flash");
 
   // ＦＬＡＳＨ  ＭＥＳＳＡＧＥ
   if (flashEl) {
@@ -37,11 +37,8 @@ document.addEventListener("turbolinks:load", () => {
     const flashApp = new Vue({
       el: flashEl,
       store,
-      components: {FlashMessage},
-      created() {
-        console.log('flash message')
-      }
-    })
+      components: { FlashMessage },
+    });
   }
 
   // ＫＡＮＢＡＮ ＆ ＴＩＣＫＥＴ
@@ -66,7 +63,7 @@ document.addEventListener("turbolinks:load", () => {
           const kanbanId = event.moved.element.kanban_id;
           const columnId = event.moved.element.id;
           const newPosition = event.moved.newIndex + 1;
-          // console.log("新的 column.position: ", newPosition);
+
           this.$store.dispatch("moveColumn", {
             kanbanId,
             columnId,
@@ -83,7 +80,6 @@ document.addEventListener("turbolinks:load", () => {
               name: this.newColumnName,
             })
             .then((res) => {
-              // console.log("res: ", res);
               this.newColumnName = "";
             });
         },

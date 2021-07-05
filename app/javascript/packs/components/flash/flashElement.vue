@@ -38,14 +38,12 @@ export default {
   methods: {
     ...mapActions(['remove_notification']),
     close() {
-      // console.log('close btn clicked');
       this.remove_notification(this.notification);
     },
   },
   computed: {
     notificationTypeClasss() {
       const expr = this.notification.type;
-      console.log('expr: ', expr)
       switch (expr) {
         case 'error':
           return 'px-4 pr-8 py-2 rounded bg-white border-4 border-red-300 shadow-md';

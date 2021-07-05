@@ -36,7 +36,6 @@ export default {
   methods: {
     toggleIsEdit() {
       this.isEdit != this.isEdit;
-      // console.log("toggle isEdit", isEdit);
     },
   },
 };

@@ -58,11 +58,10 @@ class ColumnsController < ApplicationController
   def destroy
     column = JSON.parse(@column.to_json)
     if @column.destroy
-      kanban_id = @column.kanban_id
-      string = "『#{Kanban.find(kanban_id).name}』看板的 #{@column.name} 卡片被移除了！ "
-      ActionCable.server.broadcast("flash:#{current_user.id}", { commit: 'PUSH_NOTICE', payload: { type: 'error', message: "#{string}" } })
-      # ActionCable.server.broadcast("flash:#{current_user.id}", { commit: 'PUSH_NOTICE', payload: { type: 'error', message: '移除一個看板' } })
-      ActionCable.server.broadcast("column", { commit: 'DELETE_COLUMN', payload: column })
+      # string = "『#{Kanban.find(kanban_id).name}』看板的 #{@column.name} 卡片被移除了！ "
+      # ActionCable.server.broadcast("flash:#{current_user.id}", { commit: 'PUSH_NOTICE', payload: { type: 'error', message: "#{string}" } })
+      ActionCable.server.broadcast("flash:#{current_user.id}", { commit: 'PUSH_NOTICE', payload: { type: 'error', message: '移除一個看板' } })
+      ActionCable.server.broadcast('column', { commit: 'DELETE_COLUMN', payload: column })
       render json: { head: :no_content }, status: :ok
     else
       render json: @column.errors, status: :unprocessable_entity

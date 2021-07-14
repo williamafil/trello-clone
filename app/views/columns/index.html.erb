@@ -7,12 +7,12 @@
         </transition-group>
       </draggable>  
       <div class="column bg-gray-200 p-2 text-left shadow rounded border-2 border-coolGray-300">
-        <h4 class="mb-2 font-bold">New Cards</h4>
+        <h4 class="mb-2 font-bold">Create Card</h4>
         <input
           type="text"
           class="p-2 mr-2 flex-grow w-full block rounded bg-gray-100"
           v-model="newColumnName"
-          placeholder="Enter 新增卡片"
+          placeholder="Enter to card title"
           @keyup.enter="createColumn"
         />
       </div>

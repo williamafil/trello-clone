@@ -15,8 +15,6 @@ document.addEventListener("turbolinks:load", function() {
         console.log("Kanban Channel is disconnected!");
       },
       received(data) {
-        // console.log("這裡是 column channel");
-        // console.log("data: ", data);
         if (data.commit) {
           console.log("kanban channel.commit: ", data.commit);
           window.$store.commit(data.commit, data.payload);

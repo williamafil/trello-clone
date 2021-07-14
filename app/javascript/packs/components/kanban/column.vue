@@ -4,7 +4,9 @@
       class="column w-64 cursor-move bg-gray-200 p-2 text-left shadow rounded hover:bg-trueGray-300 hover:shadow-lg"
     >
       <div class="flex justify-between items-center mb-2">
-        <h2 class="ml-1 font-semibold tracking-wider">{{ column.name }} <span class="text-xs"></span></h2>
+        <h2 class="ml-1 font-semibold tracking-wider">
+          {{ column.name }} <span class="text-xs"></span>
+        </h2>
         <div>
           <edit-menu
             @click="toggleIsEdit"
@@ -34,7 +36,7 @@
         <input
           type="text"
           class="block w-full rounded p-2 bg-gray-100"
-          placeholder="Enter 新增事項"
+          placeholder="Enter task title"
           @keyup.enter="createTicket"
         />
       </div>
@@ -72,7 +74,6 @@ export default {
       this.isEdit != this.isEdit;
     },
     dropTicket(event) {
-
       const ticketItem = event.added || event.moved;
       if (ticketItem) {
         const [behavior] = Object.keys(event);

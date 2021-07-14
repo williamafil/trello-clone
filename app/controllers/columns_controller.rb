@@ -5,7 +5,7 @@ class ColumnsController < ApplicationController
     @column.insert_at(params[:position].to_i)
     kanban_id = @column.kanban_id
     params = JSON.parse(@column.kanban.columns.to_json)
-    ActionCable.server.broadcast("flash:#{current_user.id}", { commit: 'PUSH_NOTICE', payload: { type: 'success', message: '移動了一個看板' } })
+    ActionCable.server.broadcast("flash:#{current_user.id}", { commit: 'PUSH_NOTICE', payload: { type: 'success', message: 'A card being moved' } })
     ActionCable.server.broadcast("column", { commit: 'REPOSITION_COLUMN', payload: params })
     render 'show.json'
   end
@@ -33,7 +33,7 @@ class ColumnsController < ApplicationController
     if @column.save
       column = JSON.parse(@column.to_json)
       kanban_id = @column.kanban_id
-      ActionCable.server.broadcast("flash:#{current_user.id}", { commit: 'PUSH_NOTICE', payload: { type: 'success', message: '新增一個看板' } })
+      ActionCable.server.broadcast("flash:#{current_user.id}", { commit: 'PUSH_NOTICE', payload: { type: 'success', message: 'A card being created' } })
       ActionCable.server.broadcast("column", { commit: 'ADD_COLUMN', payload: column })
       render json: @column, status: :ok
     else
@@ -46,7 +46,7 @@ class ColumnsController < ApplicationController
     if @column.update(column_params)
       column = JSON.parse(@column.to_json)
       kanban_id = @column.kanban_id
-      ActionCable.server.broadcast("flash:#{current_user.id}", { commit: 'PUSH_NOTICE', payload: { type: 'success', message: '更新一個看板' } })
+      ActionCable.server.broadcast("flash:#{current_user.id}", { commit: 'PUSH_NOTICE', payload: { type: 'success', message: 'A card being updated' } })
       ActionCable.server.broadcast("column", { commit: 'UPDATE_COLUMN', payload: column })
       render json: @column, status: :ok
     else
@@ -58,9 +58,7 @@ class ColumnsController < ApplicationController
   def destroy
     column = JSON.parse(@column.to_json)
     if @column.destroy
-      # string = "『#{Kanban.find(kanban_id).name}』看板的 #{@column.name} 卡片被移除了！ "
-      # ActionCable.server.broadcast("flash:#{current_user.id}", { commit: 'PUSH_NOTICE', payload: { type: 'error', message: "#{string}" } })
-      ActionCable.server.broadcast("flash:#{current_user.id}", { commit: 'PUSH_NOTICE', payload: { type: 'error', message: '移除一個看板' } })
+      ActionCable.server.broadcast("flash:#{current_user.id}", { commit: 'PUSH_NOTICE', payload: { type: 'error', message: 'A card being removed' } })
       ActionCable.server.broadcast('column', { commit: 'DELETE_COLUMN', payload: column })
       render json: { head: :no_content }, status: :ok
     else

@@ -1,8 +1,8 @@
 <div class="container px-4 sm:px-8 lg:px-8 xl:px-16 mx-auto">
   <section class="section hero text-center">
-    <h1 class="title text-xl mt-5">歡迎登入 <%= current_user.display_name%>的 Task Manager！</h1>
+    <h1 class="title text-xl mt-5">Welcome to <%= current_user.display_name%>'s' Task Manager！</h1>
     <br>
-    <%= link_to '新增Kanban', new_kanban_path, class: "font-light button border-2 border-gray-100 bg-gray-100 hover:bg-coolGray-50 hover:border-transparent shadow py-2 px-3 rounded" %>
+    <%= link_to 'Create Kanban', new_kanban_path, class: "font-light button border-2 border-gray-100 bg-gray-100 hover:bg-coolGray-50 hover:border-transparent shadow py-2 px-3 rounded" %>
     <div class="text-md flex p-4 mt-4">
       <div class="flex flex-wrap justify-start">
         <% @kanbans.each do |kanban| %>

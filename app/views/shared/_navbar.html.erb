@@ -34,11 +34,11 @@
                             <li>
                               <% if user_signed_in? %>
                                 <span class="mr-2">Hi! <%= current_user.display_name %></span>
-                                <%= link_to '帳戶 ', edit_user_registration_path, class: 'user-button' %>            
-                                <%= link_to '登出', destroy_user_session_path, method: 'delete', class: 'user-button' %>
+                                <%= link_to ' Account ', edit_user_registration_path, class: 'user-button mr-2 hover:text-orange-500' %> 
+                                <%= link_to ' Logout ', destroy_user_session_path, method: 'delete', class: 'user-button hover:text-orange-500' %>
                               <% else %>
-                                <%= link_to '登入 ', new_user_session_path, class: 'cta bg-white border-2 border-yellow-500 hover:bg-warmGray-100 px-3 py-2 rounded text-yellow-500 font-normal mr-2' %>
-                                <%= link_to '註冊 ', new_user_registration_path,  class: 'cta bg-white border-2 border-yellow-500 hover:bg-warmGray-100 px-3 py-2 rounded text-yellow-500 font-normal' %>
+                                <%= link_to 'Login ', new_user_session_path, class: 'cta bg-white border-2 border-yellow-500 hover:bg-warmGray-100 px-3 py-2 rounded text-yellow-500 font-normal mr-4 hover:text-orange-500' %>
+                                <%= link_to 'Register ', new_user_registration_path,  class: 'cta bg-white border-2 border-yellow-500 hover:bg-warmGray-100 px-3 py-2 rounded text-yellow-500 font-normal hover:text-orange-500' %>
                               <% end %>
                               
                             </li>

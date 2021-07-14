@@ -2,17 +2,17 @@
   <div>
     <div class="flex items-center relative">
       <div v-if="isEditMenu" class="flex items-center">
-        <div class="text-xs font-light absolute top-0 right-4 w-20 z-50">
+        <div class="text-xs font-light absolute top-0 right-2 w-24 z-50">
           <span
             @click="toggleDeleteElement"
             class="p-1 border-2 border-gray-400 rounded hover:bg-gray-200 bg-white"
-            >刪除</span
+            >Delete</span
           >
           <span
             @click="toggleEditElement"
             class="p-1 border-2 border-gray-400 rounded hover:bg-gray-200 bg-white"
           >
-            編輯
+            Edit
           </span>
         </div>
         <vertical-dots
@@ -38,7 +38,7 @@
         <div class="modal-content py-4 text-left px-6">
           <!--Title-->
           <div class="flex justify-between items-center pb-3">
-            <p class="text-xl font-bold text-gray-500">編輯</p>
+            <p class="text-xl font-bold text-gray-500">Edit</p>
             <div
               class="cursor-pointer modal-close z-100"
               @click="toggleEditElement"
@@ -56,7 +56,6 @@
               </svg>
             </div>
           </div>
-          <!--Body-->
           <form
             id="add_caretaker_form"
             class="w-full"
@@ -87,13 +86,13 @@
                 @click="toggleEditElement"
                 class="px-4 py-2 bg-gray-200 rounded text-gray-700 hover:bg-gray-300 font-normal text-sm"
               >
-                取消
+                Cancel
               </button>
               <button
                 type="submit"
                 class="px-4 py-2 bg-gray-300 ml-2 rounded text-gray-700 hover:bg-gray-400 font-normal text-sm"
               >
-                送出
+                Submit
               </button>
             </div>
           </form>
@@ -130,26 +129,25 @@
               </svg>
             </div>
           </div>
-          <!--Body-->
 
           <div class="mt-2 mb-9 mr-5 ml-5 flex justify-center">
             <p class="font-medium text-lg">
-              確定要刪除這個{{ column ? "Column" : "Ticket" }}？
+              Delete {{ column ? "Column" : "Ticket" }}？
             </p>
           </div>
-          <!--Footer-->
+
           <div class="flex justify-center">
             <button
               @click="toggleDeleteElement"
               class="px-4 py-2 bg-gray-200 rounded text-gray-700 hover:bg-gray-300 font-normal text-sm"
             >
-              取消
+              Cancel
             </button>
             <button
               @click="submitDelete"
               class="px-4 py-2 bg-red-300 ml-2 rounded text-gray-700 hover:bg-red-400 font-normal text-sm"
             >
-              刪除
+              Delete
             </button>
           </div>
         </div>
@@ -182,10 +180,7 @@ export default {
     return {
       isEditMenu: false,
       isEditElement: false,
-      // isEditTicket: false,
-      // isDeleteTicket: false,
       isDeleteElement: false,
-      // ticketDraft: Object.assign({}, this.ticket),
       ticketDraft: Object.assign({}, this.ticket),
       columnDraft: Object.assign({}, this.column),
     };
@@ -222,7 +217,6 @@ export default {
           })
           .then(() => {
             this.isEditElement = false;
-            // this.isEditTicket = false;
           });
       }
       return this.$store
@@ -232,7 +226,6 @@ export default {
         })
         .then(() => {
           this.isEditElement = false;
-          // this.isEditTicket = false;
         });
     },
     toggleDeleteElement() {
@@ -240,7 +233,6 @@ export default {
       this.isEditMenu = false;
     },
     toggleEditElement() {
-      // this.isEditTicket = !this.isEditTicket;
       this.isEditElement = !this.isEditElement;
       this.isEditMenu = false;
     },

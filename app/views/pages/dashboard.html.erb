@@ -10,8 +10,8 @@
           <%= link_to kanban_columns_path(kanban) do %>
             <article class=" h-72 w-80 m-2 border-2 border-warmGray-100 p-2 rounded-md bg-white shadow-sm hover:shadow">
               <header class="relative">
-                <%= link_to edit_kanban_path(kanban), class: "absolute right-4 top-4 " do %>
-                  <div class="rounded-full w-8 h-8 bg-gray-50 text-gray-800 hover:bg-gray-300">
+                <%= link_to edit_kanban_path(kanban), class: "absolute right-4 top-4 rounded-full w-8 h-8 bg-gray-50 text-gray-800 hover:bg-gray-300 overflow-hidden" do %>
+                  <div class="w-full h-full">
                     ...
                   </div>
                 <% end%>

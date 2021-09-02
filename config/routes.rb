@@ -2,7 +2,9 @@ Rails.application.routes.draw do
   mount ActionCable.server => '/cable'
   
   # resources :tickets
-  resources :kanbans do
+  resources :kanbans, except: [:index] do
+    get '/kanbans', to: 'dashboards#index'
+
     resources :columns, except: [:new, :edit] do
       member do
         put 'drag'

@@ -5,20 +5,16 @@
               bg-white rounded-lg shadow-md lg:shadow-lg"
     >
       <h2 class="text-center font-semibold text-3xl lg:text-3xl text-gray-800 uppercase">
-        編輯看板
+        Edit
       </h2>
-
-      
-
-
-<%= render 'form', kanban: @kanban %>
-      
+      <%= render 'form', kanban: @kanban %>
+    </div>
+      <div class="mt-2">
+      <%= link_to 'Back', dashboard_path %>
     </div>
   </div>
+
 </div>
 
 
 
-
-<%= link_to 'Show', @kanban %> |
-<%= link_to 'Back', kanbans_path %>

@@ -6,27 +6,25 @@
     <div class="text-md flex p-4 mt-4">
       <div class="flex flex-wrap justify-start">
         <% @kanbans.each do |kanban| %>
+          <div class="relative">
+            <%= link_to "...", edit_kanban_path(kanban), class: "z-100 absolute right-8 top-8 rounded-full w-8 h-8 bg-gray-50 text-gray-800 hover:bg-gray-300 overflow-hidden" %>
+            <%= link_to kanban_columns_path(kanban) do %>
+              <article class=" h-72 w-80 m-2 border-2 border-warmGray-100 p-2 rounded-md bg-white shadow-sm hover:shadow">
+                <header class="relative">
 
-          <%= link_to kanban_columns_path(kanban) do %>
-            <article class=" h-72 w-80 m-2 border-2 border-warmGray-100 p-2 rounded-md bg-white shadow-sm hover:shadow">
-              <header class="relative">
-                <%= link_to edit_kanban_path(kanban), class: "absolute right-4 top-4 rounded-full w-8 h-8 bg-gray-50 text-gray-800 hover:bg-gray-300 overflow-hidden" do %>
-                  <div class="w-full h-full">
-                    ...
-                  </div>
-                <% end%>
-                <div class="rounded-t-lg object-cover h-36 w-full bg-warmGray-500"></div>
-                <h2 class="absolute left-0 right-0 top-1/2 bottom-1/2 text-white text-lg font-bold tracking-wide hover:bg-transparent hover:text-gray-200">
-                  <%= kanban.name %>
-                </h2>
-              </header>
-              <section>
-                <p class="mt-2 h-28 text-gray-700 text-sm overflow-scroll overflow-y-auto tracking-wide">
-                  <%= kanban.description %>
-                </p>
-              </section>
-            </article>
-          <% end %>
+                  <div class="rounded-t-lg object-cover h-36 w-full bg-warmGray-500"></div>
+                  <h2 class="absolute left-0 right-0 top-1/2 bottom-1/2 text-white text-lg font-bold tracking-wide hover:bg-transparent hover:text-gray-200">
+                    <%= kanban.name %>
+                  </h2>
+                </header>
+                <section>
+                  <p class="mt-2 h-28 text-gray-700 text-sm overflow-scroll overflow-y-auto tracking-wide">
+                    <%= kanban.description %>
+                  </p>
+                </section>
+              </article>
+            <% end %>
+          </div>
         <% end %>
       </div>
     </div> 
